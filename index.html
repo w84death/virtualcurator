@@ -43,6 +43,31 @@
         top: 0;
         right: 0;
       }
+
+      #floating-menu,
+      #floating-menu-load {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      #floating-menu-load {
+        left:10px;
+        right:auto;
+      }
+      .menu-button {
+        background-color: #4cc3d9;
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        cursor: pointer;
+      }
     </style>
 
   </head>
@@ -93,6 +118,18 @@
       <a-light type="ambient" color="#AAA" intensity="1"></a-light>
     </a-scene>
 
+    <div id="floating-menu">
+      <a class="menu-button" href="sample-models/suzane.glb" download="suzane.glb">Download Suzane</a>
+      <a class="menu-button" href="sample-models/a-vr-enviro-1.glb" download="a-vr-enviro-1.glb">Download Environment 1</a>
+      <a class="menu-button" href="sample-models/a-vr-enviro-2.glb" download="a-vr-enviro-2.glb">Download Environment 2</a>
+    </div>
+
+    <div id="floating-menu-load">
+      <button class="menu-button" id="load-suzane">Load Suzane</button>
+      <button class="menu-button" id="load-enviro-1">Load Environment 1</button>
+      <button class="menu-button" id="load-enviro-2">Load Environment 2</button>
+    </div>
+
     <div id="drop-zone-model" class="drop-zone">
       <h1 style="text-align: center; margin-top: 40%;">Drop your model .glb file here</h1>
     </div>
@@ -103,6 +140,40 @@
     <script>
       const dropZoneModel = document.getElementById('drop-zone-model');
       const dropZoneEnvironment = document.getElementById('drop-zone-environment');
+
+      function loadModel(url) {
+        const modelEntity = document.getElementById('customModel');
+        modelEntity.setAttribute('gltf-model', url);
+        // Remove the initial environment
+        const entity = document.getElementById('initialBox');
+        entity.parentNode.removeChild(entity);
+      }
+
+      function loadEnvironment(url) {
+        const environmentEntity = document.getElementById('customEnvironment');
+        environmentEntity.setAttribute('gltf-model', url);
+
+        // Remove the initial environment
+        const initialEnvironmentEntities = ['whiteFloor', 'circularCeiling', 'column1', 'column2', 'column3', 'column4'];
+        for (const entityId of initialEnvironmentEntities) {
+          const entity = document.getElementById(entityId);
+          if (entity) {
+            entity.parentNode.removeChild(entity);
+          }
+        }
+      }
+
+      document.getElementById('load-suzane').addEventListener('click', () => {
+        loadModel('sample-models/suzane.glb');
+      });
+
+      document.getElementById('load-enviro-1').addEventListener('click', () => {
+        loadEnvironment('sample-models/a-vr-enviro-1.glb');
+      });
+
+      document.getElementById('load-enviro-2').addEventListener('click', () => {
+        loadEnvironment('sample-models/a-vr-enviro-2.glb');
+      });
 
       document.addEventListener('dragover', (event) => {
         event.preventDefault();
@@ -131,15 +202,9 @@
           const modelEntity = document.getElementById('customModel');
           modelEntity.setAttribute('gltf-model', modelURL);
 
-          const dragText = document.getElementById('dragText');
-          dragText.parentNode.removeChild(dragText);
-
           // Remove the initial environment
-          const initialEnvironmentEntities = ['initialBox'];
-          for (const entityId of initialEnvironmentEntities) {
-            const entity = document.getElementById(entityId);
-            entity.parentNode.removeChild(entity);
-          }
+          const entity = document.getElementById('initialBox');
+          entity.parentNode.removeChild(entity);
         }
       });
 
