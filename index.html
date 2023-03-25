@@ -4,28 +4,7 @@
     <meta charset="utf-8">
     <title>ChatGPT VR Viewer</title>
     <meta name="description" content="A simple VR app using A-Frame with a room, a cube, hand tracking controls, hand models, fog, and art exhibition lighting.">
-    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-    <script>
-      AFRAME.registerComponent('random-cubes', {
-        init: function () {
-          for (let i = 0; i < 100; i++) {
-            const randomX = Math.random() * 8 - 4; // Random X position between -4 and 4
-            const randomZ = Math.random() * 8 - 4; // Random Z position between -4 and 4
-            const cube = document.createElement('a-box');
-            const randomDelay = Math.random() * 10000;
-            cube.setAttribute('width', 0.1);
-            cube.setAttribute('height', 0.1);
-            cube.setAttribute('depth', 0.1);
-            cube.setAttribute('position', `${randomX} 0.1 ${randomZ}`);
-            cube.setAttribute('color', '#FFFFFF');
-            cube.setAttribute('shadow', 'receive: true; cast:true;');
-            cube.setAttribute('animation', `property: position; to: ${randomX} 4 ${randomZ}; dur:10000; loop:true; delay: ${randomDelay}; easing:easeInOutElastic`);
-            this.el.appendChild(cube);
-          }
-        }
-      });
-    </script>
-
+    <script src="aframe-master.min.js"></script>
     <style>
       .drop-zone {
         position: fixed;
@@ -45,7 +24,8 @@
       }
 
       #floating-menu,
-      #floating-menu-load {
+      #floating-menu-load,
+      #floating-info-box{
         position: fixed;
         top: 10px;
         right: 10px;
@@ -57,7 +37,47 @@
         left:10px;
         right:auto;
       }
+      #floating-menu-load .menu-button {
+        background-color: #79ce12;
+      }
+
+      #floating-info-box {
+        bottom:10px;
+        left:10px;
+        top:auto;
+        font-size: 10px;
+        color:#666;
+      }
+      #floating-info-box p {
+        margin:0;
+      }
+      #floating-info-box p+p{
+        margin-top:0.75em;
+      }
       .menu-button {
+        background-color: #4cc3d9;
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      #floating-info-box {
+        background-color: rgba(255, 255, 255, 0.3);
+        padding: 10px;
+        border-radius: 5px;
+        max-width: 500px;
+      }
+
+      #move-light-button {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
         background-color: #4cc3d9;
         border: none;
         color: white;
@@ -72,29 +92,24 @@
 
   </head>
   <body>
-    <a-scene fog="type:exponential; color:#241f31; density:0.04;"
+    <a-scene loading-screen="dotsColor: black; backgroundColor: white"
              renderer="antialias:true; colorManagement:true; physicallyCorrectLights:true; toneMapping:ACESFilmic; highRefreshRate:true;"
-             shadow="castShadow: true; type:pcfsoft;"
+             shadow="castShadow:true; type:pcfsoft;"
              reflection>
+      <a-sky id="hdr-sky" radius="300"></a-sky>
+
       <!-- Camera setup -->
-      <a-entity id="rig"
-                movement-controls="speed: 0.1"
-                position="0 1.6 3">
-        <a-entity id="camera" camera look-controls wasd-controls position="0 0 0"></a-entity>
+      <a-entity id="rig" movement-controls="speed: 0.1" position="0 1.6 3">
+        <a-entity id="camera" camera look-controls wasd-controls position="0 0 0">
+        </a-entity>
+        <a-entity id="left-hand" oculus-touch-controls="hand: left" laser-controls="hand: left" raycaster="objects: .teleportable" teleport-controls="cameraRig: #rig; teleportOrigin: #camera; button: trackpad;" buttons-events></a-entity>
+        <a-entity id="right-hand" laser-controls="hand: right"  oculus-touch-controls="hand: right" raycaster="objects: .teleportable" teleport-controls="cameraRig: #rig; teleportOrigin: #camera;" buttons-events></a-entity>
+
       </a-entity>
 
+
       <!-- White floor -->
-      <a-plane id="whiteFloor" position="0 0 0" rotation="-90 0 0" width="100" height="100" color="#ffffff" shadow="receive:true; cast:false;"></a-plane>
-
-      <!-- Circular ceiling -->
-      <a-cylinder id="circularCeiling" position="0 10 0" radius="50" height="0.5" rotation="0 0 0" color="#ffffff" shadow="receive:false; cast:true;"></a-cylinder>
-
-      <!-- Four columns -->
-      <a-cylinder id="column1" position="25 5 25" radius="1" height="10" color="#ffffff" shadow="receive:true; cast:true;"></a-cylinder>
-      <a-cylinder id="column2" position="25 5 -25" radius="1" height="10" color="#ffffff" shadow="receive:true; cast:true;"></a-cylinder>
-      <a-cylinder id="column3" position="-25 5 25" radius="1" height="10" color="#ffffff" shadow="receive:true; cast:true;"></a-cylinder>
-      <a-cylinder id="column4" position="-25 5 -25" radius="1" height="10" color="#ffffff" shadow="receive:true; cast:true;"></a-cylinder>
-
+      <a-plane id="whiteFloor" position="0 0 0" rotation="-90 0 0" width="6" height="6" color="#222222" shadow="receive:true; cast:false;"></a-plane>
 
       <!-- Cube in the center -->
       <a-box id="initialBox" position="0 0.5 0" width="1" height="1" depth="1" color="#F8F8F8" shadow>
@@ -112,9 +127,9 @@
 
 
       <!-- Lighting -->
-      <a-light position="-2 4 0" light="type:directional; castShadow:true; color:#FFF; intensity:4; target:#customModel; angle:30;"></a-light>
-      <a-light position="2 4 0" light="type:directional; castShadow:true; color:#FFF; intensity:4; target:#customModel; angle:30;"></a-light>
-      <a-light position="2 3 2" light="type:directional; castShadow:true; color:#FFF; intensity:4; target:#customModel; angle:160;"></a-light>
+      <a-light id="light1" position="-2 4 0" light="type:directional; castShadow:true; color:#FFF; intensity:4; target:#customModel; angle:30;"></a-light>
+      <a-light id="light2" position="2 4 0" light="type:directional; castShadow:true; color:#FFF; intensity:4; target:#customModel; angle:30;"></a-light>
+      <a-light id="light3" position="2 3 2" light="type:directional; castShadow:true; color:#FFF; intensity:4; target:#customModel; angle:160;"></a-light>
       <a-light type="ambient" color="#AAA" intensity="1"></a-light>
     </a-scene>
 
@@ -128,7 +143,14 @@
       <button class="menu-button" id="load-suzane">Load Suzane</button>
       <button class="menu-button" id="load-enviro-1">Load Environment 1</button>
       <button class="menu-button" id="load-enviro-2">Load Environment 2</button>
+      <button class="menu-button" id="load-sky">Load Random sky</button>
     </div>
+
+    <div id="floating-info-box">
+      <p>Created by Krzysztof Krystian Jankowski and ChatGPT by OpenIA.</p>
+    </div>
+
+    <button id="move-light-button">Move Light</button>
 
     <div id="drop-zone-model" class="drop-zone">
       <h1 style="text-align: center; margin-top: 40%;">Drop your model .glb file here</h1>
@@ -154,7 +176,7 @@
         environmentEntity.setAttribute('gltf-model', url);
 
         // Remove the initial environment
-        const initialEnvironmentEntities = ['whiteFloor', 'circularCeiling', 'column1', 'column2', 'column3', 'column4'];
+        const initialEnvironmentEntities = ['whiteFloor'];
         for (const entityId of initialEnvironmentEntities) {
           const entity = document.getElementById(entityId);
           if (entity) {
@@ -220,13 +242,76 @@
           environmentEntity.setAttribute('gltf-model', environmentURL);
 
           // Remove the initial environment
-          const initialEnvironmentEntities = ['whiteFloor', 'circularCeiling', 'column1', 'column2', 'column3', 'column4'];
+          const initialEnvironmentEntities = ['whiteFloor'];
           for (const entityId of initialEnvironmentEntities) {
             const entity = document.getElementById(entityId);
             entity.parentNode.removeChild(entity);
           }
         }
       });
+
+      function randomPosition(radius) {
+        const angle = Math.random() * 2 * Math.PI;
+        const x = radius * Math.cos(angle);
+        const z = radius * Math.sin(angle);
+        return { x, y: 5, z };
+      }
+
+      function moveLights(lightIds) {
+        for (const lightId of lightIds) {
+          const light = document.getElementById(lightId);
+          const currentPosition = light.getAttribute('position');
+          const newPosition = randomPosition(5);
+
+          // Add animation component to the light
+          light.setAttribute('animation', {
+            property: 'position',
+            from: `${currentPosition.x} ${currentPosition.y} ${currentPosition.z}`,
+            to: `${newPosition.x} ${newPosition.y} ${newPosition.z}`,
+            dur: 2000,
+            easing: 'easeInOutQuad',
+          });
+        }
+      }
+
+      document.getElementById('move-light-button').addEventListener('click', () => {
+        moveLights(['light1', 'light2', 'light3']);
+      });
+
+      function loadSky(url) {
+        const sky = document.querySelector('a-sky');
+        sky.setAttribute('src', url);
+      }
+
+      document.getElementById('load-sky').addEventListener('click', () => {
+        const skyUrls = ['skys/sky1.jpg', 'skys/sky2.jpg', 'skys/sky3.jpg', 'skys/sky4.jpg', 'skys/sky5.jpg', 'skys/sky6.jpg', 'skys/sky7.jpg', 'skys/sky8.jpg'];
+        const randomIndex = Math.floor(Math.random() * skyUrls.length);
+        loadSky(skyUrls[randomIndex]);
+      });
+
+      AFRAME.registerComponent('buttons-events',{
+        init: function () {
+          this.el.addEventListener('abuttondown', this.loadSky);
+          this.el.addEventListener('bbuttondown', this.moveLights2);
+          this.el.addEventListener('xbuttondown', this.addSuzane);
+          this.el.addEventListener('ybuttondown', this.changeEnviro);
+        },
+        loadSky: function(){
+            const skyUrls =['skys/sky1.jpg', 'skys/sky2.jpg', 'skys/sky3.jpg', 'skys/sky4.jpg', 'skys/sky5.jpg', 'skys/sky6.jpg', 'skys/sky7.jpg', 'skys/sky8.jpg'];
+            const randomIndex = Math.floor(Math.random() * skyUrls.length);
+            loadSky(skyUrls[randomIndex]);
+        },
+        moveLights2: function(){
+          moveLights(['light1', 'light2', 'light3']);
+        },
+        addSuzane: function(){
+          loadModel('sample-models/suzane.glb');
+        },
+        changeEnviro: function(){
+          const enviroUrls = ['sample-models/a-vr-enviro-1.glb', 'sample-models/a-vr-enviro-2.glb'];
+          const randomIndex = Math.floor(Math.random() * enviroUrls.length);
+          loadEnvironment(enviroUrls[randomIndex]);
+        }});
     </script>
   </body>
 </html>
