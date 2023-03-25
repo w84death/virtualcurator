@@ -69,6 +69,9 @@
       #floating-menu-load .menu-button.red{
         background-color: #ff2266;
       }
+      #floating-menu-load .menu-button.share{
+        background-color: #22eecc;
+      }
 
       #floating-info-box {
         background-color: rgba(255, 255, 255, 0.3);
@@ -93,7 +96,8 @@
         cursor: pointer;
       }
 
-       #popup-window {
+       #popup-window,
+       #popup-window-share{
         position: fixed;
         top: 0;
         left: 0;
@@ -105,13 +109,13 @@
         align-items: center;
         z-index: 9999;
       }
-      #popup-content {
+      .popup-content {
         background-color: white;
         padding: 20px;
         border-radius: 10px;
         text-align: center;
       }
-      #close-popup {
+      .popup-content button {
         background-color: #4cc3d9;
         border: none;
         color: white;
@@ -129,12 +133,20 @@
   </head>
   <body>
     <div id="popup-window">
-      <div id="popup-content">
+      <div class="popup-content">
         <h1>Welcome to our VR App</h1>
         <p><small>VERSION 23-03-2023</small></p>
         <p>Created by:</p>
         <p>OpenAI's ChatGPT &amp; Krzysztof Krystian Jankowski</p>
         <button id="close-popup">Enter the App</button>
+      </div>
+    </div>
+
+    <div id="popup-window-share" style="display:none;">
+      <div class="popup-content">
+        <h3>Share this URL:</h3>
+        <p><input id="shareUrlInput" type="text" readonly></p>
+        <button id="close-popup-share">Close</button>
       </div>
     </div>
 
@@ -163,6 +175,7 @@
     </a-scene>
 
     <div id="floating-menu">
+
       <a class="menu-button" href="models/p1x.glb" download="p1x.glb">Download P1X model</a>
       <a class="menu-button" href="environments/a-vr-enviro-1.glb" download="a-vr-enviro-1.glb">Download Environment 1</a>
       <a class="menu-button" href="environments/a-vr-enviro-2.glb" download="a-vr-enviro-2.glb">Download Environment 2</a>
@@ -173,6 +186,7 @@
       <button class="menu-button" id="load-model">Load next model</button>
       <button class="menu-button" id="load-enviro">Load next environment</button>
       <button class="menu-button" id="load-sky">Load next sky</button>
+      <button  class="menu-button share" id="share-view">Share view</button>
     </div>
 
     <div id="floating-info-box">
@@ -311,6 +325,14 @@
 
       document.getElementById('restore-controls').addEventListener('click', () => {
         restoreCameraControls();
+      });
+
+      document.getElementById('share-view').addEventListener('click', () => {
+        togglePopupWindowShare();
+      });
+
+      document.getElementById('close-popup-share').addEventListener('click', () => {
+        togglePopupWindowShare();
       });
 
 
@@ -463,6 +485,8 @@
         const restore = document.querySelector('#restore-controls');
         camera.setAttribute('wasd-controls', '');
         camera.setAttribute('look-controls', '');
+        camera.setAttribute('camera-keyboard-controls', '');
+
         restore.style.display="none";
       }
 
@@ -473,13 +497,13 @@
 
         const camera = document.querySelector('#camera');
         const restore = document.querySelector('#restore-controls');
-        console.log(restore)
         if (cameraPositionString) {
           const cameraPosition = AFRAME.utils.coordinates.parse(cameraPositionString);
           camera.setAttribute('position', cameraPosition);
           restore.style.display="block";
         } else {
-          camera.setAttribute('wasd-controls', '');
+          restoreControls();
+          restoreLook();
         }
 
         if (cameraRotationString) {
@@ -487,8 +511,30 @@
           camera.setAttribute('rotation', cameraRotation);
           restore.style.display="block";
         }else{
-          camera.setAttribute('look-controls', '');
+          restoreLook();
         }
+      }
+
+      function blockControls(){
+        const camera = document.querySelector('#camera');
+        camera.removeAttribute('wasd-controls');
+        camera.removeAttribute('camera-keyboard-controls');
+
+      }
+
+      function blockLook(){
+        camera.removeAttribute('look-controls');
+      }
+
+      function restoreControls(){
+        const camera = document.querySelector('#camera');
+        camera.setAttribute('wasd-controls', '');
+        camera.setAttribute('camera-keyboard-controls', '');
+
+      }
+
+      function restoreLook(){
+        camera.setAttribute('look-controls', '');
       }
 
       AFRAME.registerComponent('camera-transform-updater', {
@@ -524,7 +570,71 @@
         }
       });
 
+      AFRAME.registerComponent('camera-keyboard-controls', {
+        init: function () {
+          this.onKeyDown = this.onKeyDown.bind(this);
+          this.onKeyUp = this.onKeyUp.bind(this);
+          this.keysPressed = new Set();
+        },
 
+        play: function () {
+          window.addEventListener('keydown', this.onKeyDown);
+          window.addEventListener('keyup', this.onKeyUp);
+        },
+
+        pause: function () {
+          window.removeEventListener('keydown', this.onKeyDown);
+          window.removeEventListener('keyup', this.onKeyUp);
+        },
+
+        tick: function (time, deltaTime) {
+          this.updateCameraPosition(deltaTime);
+        },
+
+        onKeyDown: function (event) {
+          this.keysPressed.add(event.key);
+        },
+
+        onKeyUp: function (event) {
+          this.keysPressed.delete(event.key);
+        },
+
+        updateCameraPosition: function (deltaTime) {
+          if (this.keysPressed.size === 0) {
+            return;
+          }
+
+          const position = this.el.getAttribute('position');
+          const speed = 2; // Adjust the speed value to your preference
+          const delta = deltaTime / 1000;
+
+          if (this.keysPressed.has('e')) {
+            position.y += speed * delta;
+          }
+          if (this.keysPressed.has('q')) {
+            position.y -= speed * delta;
+          }
+
+          this.el.setAttribute('position', position);
+        }
+      });
+
+
+      function togglePopupWindowShare() {
+        const popupShare = document.querySelector('#popup-window-share');
+        const shareUrlInput = document.querySelector('#shareUrlInput');
+        const isVisible = popupShare.style.display === "flex";
+
+        if (isVisible) {
+          popupShare.style.display="none";
+          restoreControls();
+        } else {
+          blockControls();
+          shareUrlInput.value = window.location.href;
+          popupShare.style.display="flex";
+          shareUrlInput.select();
+        }
+      }
 
 
       document.getElementById('close-popup').addEventListener('click', () => {
