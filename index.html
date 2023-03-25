@@ -414,24 +414,22 @@
 
       AFRAME.registerComponent('buttons-events',{
         init: function () {
-          this.el.addEventListener('abuttondown', this.loadSky);
-          this.el.addEventListener('bbuttondown', this.moveLights2);
-          this.el.addEventListener('xbuttondown', this.addSuzane);
+          this.el.addEventListener('abuttondown', this.changeSky);
+          this.el.addEventListener('bbuttondown', this.changeLight);
+          this.el.addEventListener('xbuttondown', this.changeModel);
           this.el.addEventListener('ybuttondown', this.changeEnviro);
         },
-        loadSky: function(){
+        changeSky: function(){
             loadNextSky()
         },
-        moveLights2: function(){
+        changeLight: function(){
             moveLights(['light1', 'light2', 'light3']);
         },
-        addSuzane: function(){
-          loadModel('sample-models/p1x.glb');
+        changeModel: function(){
+            loadNextModel();
         },
         changeEnviro: function(){
-          const enviroUrls = ['sample-models/a-vr-enviro-1.glb', 'sample-models/a-vr-enviro-2.glb'];
-          const randomIndex = Math.floor(Math.random() * enviroUrls.length);
-          loadEnvironment(enviroUrls[randomIndex]);
+            loadNextEnvironment();
         }
       });
 
