@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Simple A-Frame VR App with Hand Tracking Controls, Fog, and Art Exhibition Lighting</title>
+    <meta name="description" content="A simple VR app using A-Frame with a room, a cube, hand tracking controls, hand models, fog, and art exhibition lighting.">
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://wizgrav.github.io/aframe-effects/dist/aframe-effects.min.js"></script>
+    <script>
+      AFRAME.registerComponent('random-cubes', {
+        init: function () {
+          for (let i = 0; i < 100; i++) {
+            const randomX = Math.random() * 8 - 4; // Random X position between -4 and 4
+            const randomZ = Math.random() * 8 - 4; // Random Z position between -4 and 4
+            const cube = document.createElement('a-box');
+            const randomDelay = Math.random() * 10000;
+            cube.setAttribute('width', 0.1);
+            cube.setAttribute('height', 0.1);
+            cube.setAttribute('depth', 0.1);
+            cube.setAttribute('position', `${randomX} 0.1 ${randomZ}`);
+            cube.setAttribute('color', '#FFFFFF');
+            cube.setAttribute('shadow', 'receive: true; cast:true;');
+            cube.setAttribute('animation', `property: position; to: ${randomX} 4 ${randomZ}; dur:10000; loop:true; delay: ${randomDelay}; easing:easeInOutElastic`);
+            this.el.appendChild(cube);
+          }
+        }
+      });
+
+
+    </script>
+
+    <style>
+      .drop-zone {
+        position: fixed;
+        width: 50%;
+        height: 100%;
+        border: dashed 4px #888;
+        background-color: rgba(255, 255, 255, 0.5);
+        display: none;
+      }
+      #drop-zone-model {
+        top: 0;
+        left: 0;
+      }
+      #drop-zone-environment {
+        top: 0;
+        right: 0;
+      }
+    </style>
+
+  </head>
+  <body>
+    <a-scene fog="type:exponential; color:#241f31; density:0.04;"
+             renderer="antialias:true; colorManagement:true; physicallyCorrectLights:true; toneMapping:ACESFilmic; highRefreshRate:true;"
+             shadow="castShadow: true; type:pcfsoft;"
+             effects="bloom, fxaa" bloom="radius: 0.66" fxaa
+             reflection>
+      <!-- Camera setup -->
+      <a-entity id="rig"
+                movement-controls="speed: 0.1"
+                position="0 1.6 3">
+        <a-entity id="camera" camera look-controls wasd-controls position="0 0 0"></a-entity>
+      </a-entity>
+
+      <!-- White floor -->
+      <a-plane id="whiteFloor" position="0 0 0" rotation="-90 0 0" width="100" height="100" color="#ffffff" shadow="receive:true; cast:false;"></a-plane>
+
+      <!-- Circular ceiling -->
+      <a-cylinder id="circularCeiling" position="0 10 0" radius="50" height="0.5" rotation="0 0 0" color="#ffffff" shadow="receive:false; cast:true;"></a-cylinder>
+
+      <!-- Four columns -->
+      <a-cylinder id="column1" position="25 5 25" radius="1" height="10" color="#ffffff" shadow="receive:true; cast:true;"></a-cylinder>
+      <a-cylinder id="column2" position="25 5 -25" radius="1" height="10" color="#ffffff" shadow="receive:true; cast:true;"></a-cylinder>
+      <a-cylinder id="column3" position="-25 5 25" radius="1" height="10" color="#ffffff" shadow="receive:true; cast:true;"></a-cylinder>
+      <a-cylinder id="column4" position="-25 5 -25" radius="1" height="10" color="#ffffff" shadow="receive:true; cast:true;"></a-cylinder>
+
+
+      <!-- Cube in the center -->
+      <a-box id="initialBox" position="0 0.5 0" width="1" height="1" depth="1" color="#F8F8F8" shadow>
+        <a-sphere position="0 1 0" radius="0.5" color="#9141ac" roughness="0.01"><a-spere>
+        <a-text id="dragText" value="DRAG YOUR MODEL HERE" align="center" position="0 0.6 0" color="#000" width="2"></a-text>
+      </a-box>
+
+      <!-- Sky -->
+      <a-sky color="#ECECEC"></a-sky>
+
+      <a-entity id="customModel" position="0 2 0" scale="1 1 1" shadow="receive:true; cast:true;"></a-entity>
+
+      <!-- Custom environment -->
+      <a-entity id="customEnvironment" position="0 0 0" scale="1 1 1" shadow="receive:true; cast:false;"></a-entity>
+
+
+      <!-- Lighting -->
+      <a-light position="-2 4 0" light="type:directional; castShadow:true; color:#FFF; intensity:4; target:#customModel; angle:30;"></a-light>
+      <a-light position="2 4 0" light="type:directional; castShadow:true; color:#FFF; intensity:4; target:#customModel; angle:30;"></a-light>
+      <a-light position="2 3 2" light="type:directional; castShadow:true; color:#FFF; intensity:4; target:#customModel; angle:160;"></a-light>
+      <a-light type="ambient" color="#AAA" intensity="1"></a-light>
+    </a-scene>
+
+    <div id="drop-zone-model" class="drop-zone">
+      <h1 style="text-align: center; margin-top: 40%;">Drop your model .glb file here</h1>
+    </div>
+    <div id="drop-zone-environment" class="drop-zone">
+      <h1 style="text-align: center; margin-top: 40%;">Drop your environment .glb file here</h1>
+    </div>
+
+    <script>
+      const dropZoneModel = document.getElementById('drop-zone-model');
+      const dropZoneEnvironment = document.getElementById('drop-zone-environment');
+
+      document.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        dropZoneModel.style.display = 'block';
+        dropZoneEnvironment.style.display = 'block';
+      });
+
+      dropZoneModel.addEventListener('dragleave', (event) => {
+        event.preventDefault();
+        dropZoneModel.style.display = 'none';
+      });
+
+      dropZoneEnvironment.addEventListener('dragleave', (event) => {
+        event.preventDefault();
+        dropZoneEnvironment.style.display = 'none';
+      });
+
+      dropZoneModel.addEventListener('drop', async (event) => {
+        event.preventDefault();
+        dropZoneModel.style.display = 'none';
+        dropZoneEnvironment.style.display = 'none';
+
+        const file = event.dataTransfer.files[0];
+        if (file && file.name.endsWith('.glb')) {
+          const modelURL = URL.createObjectURL(file);
+          const modelEntity = document.getElementById('customModel');
+          modelEntity.setAttribute('gltf-model', modelURL);
+
+          const dragText = document.getElementById('dragText');
+          dragText.parentNode.removeChild(dragText);
+
+          // Remove the initial environment
+          const initialEnvironmentEntities = ['initialBox'];
+          for (const entityId of initialEnvironmentEntities) {
+            const entity = document.getElementById(entityId);
+            entity.parentNode.removeChild(entity);
+          }
+        }
+      });
+
+      dropZoneEnvironment.addEventListener('drop', async (event) => {
+        event.preventDefault();
+        dropZoneModel.style.display = 'none';
+        dropZoneEnvironment.style.display = 'none';
+
+        const file = event.dataTransfer.files[0];
+        if (file && file.name.endsWith('.glb')) {
+          const environmentURL = URL.createObjectURL(file);
+          const environmentEntity = document.getElementById('customEnvironment');
+          environmentEntity.setAttribute('gltf-model', environmentURL);
+
+          // Remove the initial environment
+          const initialEnvironmentEntities = ['whiteFloor', 'circularCeiling', 'column1', 'column2', 'column3', 'column4'];
+          for (const entityId of initialEnvironmentEntities) {
+            const entity = document.getElementById(entityId);
+            entity.parentNode.removeChild(entity);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
