@@ -2,10 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Simple A-Frame VR App with Hand Tracking Controls, Fog, and Art Exhibition Lighting</title>
+    <title>ChatGPT VR Viewer</title>
     <meta name="description" content="A simple VR app using A-Frame with a room, a cube, hand tracking controls, hand models, fog, and art exhibition lighting.">
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-    <script src="https://wizgrav.github.io/aframe-effects/dist/aframe-effects.min.js"></script>
     <script>
       AFRAME.registerComponent('random-cubes', {
         init: function () {
@@ -25,8 +24,6 @@
           }
         }
       });
-
-
     </script>
 
     <style>
@@ -53,7 +50,6 @@
     <a-scene fog="type:exponential; color:#241f31; density:0.04;"
              renderer="antialias:true; colorManagement:true; physicallyCorrectLights:true; toneMapping:ACESFilmic; highRefreshRate:true;"
              shadow="castShadow: true; type:pcfsoft;"
-             effects="bloom, fxaa" bloom="radius: 0.66" fxaa
              reflection>
       <!-- Camera setup -->
       <a-entity id="rig"
