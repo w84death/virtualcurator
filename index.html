@@ -46,7 +46,7 @@
         left:10px;
         top:auto;
         font-size: 10px;
-        color:#666;
+        color:#222;
       }
       #floating-info-box p {
         margin:0;
@@ -66,11 +66,15 @@
         cursor: pointer;
       }
 
+      #floating-menu-load .menu-button.red{
+        background-color: #ff2266;
+      }
+
       #floating-info-box {
         background-color: rgba(255, 255, 255, 0.3);
         padding: 10px;
         border-radius: 5px;
-        max-width: 500px;
+        max-width: 200px;
       }
 
       #move-light-button {
@@ -127,6 +131,7 @@
     <div id="popup-window">
       <div id="popup-content">
         <h1>Welcome to our VR App</h1>
+        <p><small>VERSION 23-03-2023</small></p>
         <p>Created by:</p>
         <p>OpenAI's ChatGPT &amp; Krzysztof Krystian Jankowski</p>
         <button id="close-popup">Enter the App</button>
@@ -140,31 +145,15 @@
       <a-sky id="hdr-sky" radius="300"></a-sky>
 
       <!-- Camera setup -->
-      <a-entity id="rig" movement-controls="speed: 0.1" position="0 1.6 3">
-        <a-entity id="camera" camera look-controls wasd-controls position="0 0 0">
-        </a-entity>
-        <a-entity id="left-hand" oculus-touch-controls="hand: left" laser-controls="hand: left" raycaster="objects: .teleportable" teleport-controls="cameraRig: #rig; teleportOrigin: #camera; button: trackpad;" buttons-events></a-entity>
-        <a-entity id="right-hand" laser-controls="hand: right"  oculus-touch-controls="hand: right" raycaster="objects: .teleportable" teleport-controls="cameraRig: #rig; teleportOrigin: #camera;" buttons-events></a-entity>
-
+      <a-entity id="cameraRig" movement-controls="speed: 0.1" position="0 1.6 3">
+        <a-entity id="camera" camera position="0 0 0" camera-transform-updater></a-entity>
       </a-entity>
 
+      <a-entity id="left-hand" oculus-touch-controls="hand: left" laser-controls="hand: left" raycaster="objects: .teleportable" teleport-controls="cameraRig: cameraRig; teleportOrigin: #camera; button: trackpad;" buttons-events></a-entity>
+      <a-entity id="right-hand" laser-controls="hand: right"  oculus-touch-controls="hand: right" raycaster="objects: .teleportable" teleport-controls="cameraRig: cameraRig; teleportOrigin: #camera;" buttons-events></a-entity>
 
-      <!-- White floor -->
-      <a-plane id="whiteFloor" position="0 0 0" rotation="-90 0 0" width="6" height="6" color="#222222" shadow="receive:true; cast:false;"></a-plane>
-
-      <!-- Cube in the center -->
-      <a-box id="initialBox" position="0 0.5 0" width="1" height="1" depth="1" color="#F8F8F8" shadow>
-        <a-sphere position="0 1 0" radius="0.5" color="#9141ac" roughness="0.01"><a-spere>
-      </a-box>
-
-      <!-- Sky -->
-      <a-sky color="#ECECEC"></a-sky>
-
-      <a-entity id="customModel" position="0 2 0" scale="1 1 1" shadow="receive:true; cast:true;"></a-entity>
-
-      <!-- Custom environment -->
+      <a-entity id="customModel" position="0 1 0" scale="1 1 1" shadow="receive:true; cast:true;"></a-entity>
       <a-entity id="customEnvironment" position="0 0 0" scale="1 1 1" shadow="receive:true; cast:false;"></a-entity>
-
 
       <!-- Lighting -->
       <a-light id="light1" position="-2 4 0" light="type:directional; castShadow:true; color:#FFF; intensity:4; target:#customModel; angle:30;"></a-light>
@@ -174,21 +163,20 @@
     </a-scene>
 
     <div id="floating-menu">
-      <a class="menu-button" href="sample-models/suzane.glb" download="suzane.glb">Download Suzane</a>
-      <a class="menu-button" href="sample-models/a-vr-enviro-1.glb" download="a-vr-enviro-1.glb">Download Environment 1</a>
-      <a class="menu-button" href="sample-models/a-vr-enviro-2.glb" download="a-vr-enviro-2.glb">Download Environment 2</a>
+      <a class="menu-button" href="models/p1x.glb" download="p1x.glb">Download P1X model</a>
+      <a class="menu-button" href="environments/a-vr-enviro-1.glb" download="a-vr-enviro-1.glb">Download Environment 1</a>
+      <a class="menu-button" href="environments/a-vr-enviro-2.glb" download="a-vr-enviro-2.glb">Download Environment 2</a>
     </div>
 
     <div id="floating-menu-load">
-      <button class="menu-button" id="load-suzane">Load Suzane</button>
-      <button class="menu-button" id="load-enviro-0">Load Environment 0</button>
-      <button class="menu-button" id="load-enviro-1">Load Environment 1</button>
-      <button class="menu-button" id="load-enviro-2">Load Environment 2</button>
+      <button class="menu-button red" id="restore-controls" style="display:none;">RESTORE CAMERA CONTROLS</button>
+      <button class="menu-button" id="load-model">Load next model</button>
+      <button class="menu-button" id="load-enviro">Load next environment</button>
       <button class="menu-button" id="load-sky">Load next sky</button>
     </div>
 
     <div id="floating-info-box">
-      <p>Created by Krzysztof Krystian Jankowski and ChatGPT by OpenIA.</p>
+      <p>Source code available at <a href="https://github.com/w84death/ai-vr-viewer">github.com/w84death/ai-vr-viewer</a>.</p>
     </div>
 
     <button id="move-light-button">Move Light</button>
@@ -201,6 +189,12 @@
     </div>
 
     <script>
+      const environmentImages = [
+        'environments/a-vr-enviro-0.glb',
+        'environments/a-vr-enviro-1.glb',
+        'environments/a-vr-enviro-2.glb',
+      ];
+      let currentEnvironmentIndex = 0;
       const skyImages = [
         'skys/sky1.jpg',
         'skys/sky2.jpg',
@@ -211,58 +205,114 @@
         'skys/sky7.jpg',
         'skys/sky8.jpg',
         'skys/sky9.jpg',
-        'skys/sky10.jpg'
+        'skys/sky10.jpg',
+        'skys/sky11.jpg',
+        'skys/sky12.jpg',
+        'skys/sky13.jpg'
       ];
       let currentSkyIndex = 0;
+      const modelImages = [
+        'models/p1x.glb',
+        'models/bolt.glb',
+        'models/suzane.glb',
+      ];
+      let currentModelIndex = 0;
+
       const dropZoneModel = document.getElementById('drop-zone-model');
       const dropZoneEnvironment = document.getElementById('drop-zone-environment');
 
       function loadModel(url) {
-        const modelEntity = document.getElementById('customModel');
-        modelEntity.setAttribute('gltf-model', url);
-        // Remove the initial environment
-        const entity = document.getElementById('initialBox');
-        entity.parentNode.removeChild(entity);
+        const model = document.getElementById('customModel');
+        model.setAttribute('gltf-model', url);
       }
 
-      function loadEnvironment(url) {
-        const environmentEntity = document.getElementById('customEnvironment');
-        environmentEntity.setAttribute('gltf-model', url);
+      function loadModelFromUrlHash() {
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const modelFilename = params.get('model');
 
-        // Remove the initial environment
-        const initialEnvironmentEntities = ['whiteFloor'];
-        for (const entityId of initialEnvironmentEntities) {
-          const entity = document.getElementById(entityId);
-          if (entity) {
-            entity.parentNode.removeChild(entity);
-          }
+        if (modelFilename) {
+          const modelUrl = `models/${modelFilename}.glb`;
+          loadModel(modelUrl);
+        } else {
+          // Load the default model if no model parameter is provided
+          loadModel(modelImages[currentModelIndex]);
         }
       }
 
-      function loadNextSky() {
-        currentSkyIndex = (currentSkyIndex + 1) % skyImages.length;
-        loadSky(skyImages[currentSkyIndex]);
+
+        function loadNextModel() {
+          currentModelIndex = (currentModelIndex + 1) % modelImages.length;
+          const nextModelUrl = modelImages[currentModelIndex];
+          loadModel(nextModelUrl);
+
+          // Update the URL's hash
+          const params = new URLSearchParams(window.location.hash.slice(1));
+          const nextModelFilename = nextModelUrl.split('/').pop().split('.')[0];
+          params.set('model', nextModelFilename);
+          window.location.hash = params.toString();
+        }
+
+
+      function loadEnvironment(url) {
+        const environment = document.getElementById('customEnvironment');
+        environment.setAttribute('gltf-model', url);
       }
 
-      document.getElementById('load-suzane').addEventListener('click', () => {
-        loadModel('sample-models/suzane.glb');
+      function loadEnvironmentFromUrlHash() {
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const environmentFilename = params.get('environment');
+
+        if (environmentFilename) {
+          const environmentUrl = `environments/${environmentFilename}.glb`;
+          loadEnvironment(environmentUrl);
+        } else {
+          loadEnvironment(environmentImages[currentEnvironmentIndex]);
+        }
+      }
+
+
+      function loadNextSky() {
+        currentSkyIndex = (currentSkyIndex + 1) % skyImages.length;
+        const nextSkyUrl = skyImages[currentSkyIndex];
+        loadSky(nextSkyUrl);
+
+        // Update the URL's hash
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const nextSkyFilename = nextSkyUrl.split('/').pop().split('.')[0];
+        params.set('sky', nextSkyFilename);
+        window.location.hash = params.toString();
+      }
+
+      function loadNextEnvironment() {
+        currentEnvironmentIndex = (currentEnvironmentIndex + 1) % environmentImages.length;
+        const nextEnvironmentUrl = environmentImages[currentEnvironmentIndex];
+        loadEnvironment(nextEnvironmentUrl);
+
+        // Update the URL's hash
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const nextEnvironmentFilename = nextEnvironmentUrl.split('/').pop().split('.')[0];
+        params.set('environment', nextEnvironmentFilename);
+        window.location.hash = params.toString();
+      }
+
+
+
+      document.getElementById('load-model').addEventListener('click', () => {
+        loadNextModel();
       });
 
-      document.getElementById('load-enviro-0').addEventListener('click', () => {
-        loadEnvironment('sample-models/a-vr-enviro-0.glb');
-      });
-
-      document.getElementById('load-enviro-1').addEventListener('click', () => {
-        loadEnvironment('sample-models/a-vr-enviro-1.glb');
-      });
-
-      document.getElementById('load-enviro-2').addEventListener('click', () => {
-        loadEnvironment('sample-models/a-vr-enviro-2.glb');
+      document.getElementById('load-enviro').addEventListener('click', () => {
+       loadNextEnvironment();
       });
 
       document.getElementById('load-sky').addEventListener('click', () => {
-        loadNextSky()
+        loadNextSky();
       });
+
+      document.getElementById('restore-controls').addEventListener('click', () => {
+        restoreCameraControls();
+      });
+
 
       document.addEventListener('dragover', (event) => {
         event.preventDefault();
@@ -290,10 +340,6 @@
           const modelURL = URL.createObjectURL(file);
           const modelEntity = document.getElementById('customModel');
           modelEntity.setAttribute('gltf-model', modelURL);
-
-          // Remove the initial environment
-          const entity = document.getElementById('initialBox');
-          entity.parentNode.removeChild(entity);
         }
       });
 
@@ -307,38 +353,54 @@
           const environmentURL = URL.createObjectURL(file);
           const environmentEntity = document.getElementById('customEnvironment');
           environmentEntity.setAttribute('gltf-model', environmentURL);
-
-          // Remove the initial environment
-          const initialEnvironmentEntities = ['whiteFloor'];
-          for (const entityId of initialEnvironmentEntities) {
-            const entity = document.getElementById(entityId);
-            entity.parentNode.removeChild(entity);
-          }
         }
       });
 
       function randomPosition(radius) {
         const angle = Math.random() * 2 * Math.PI;
         const x = radius * Math.cos(angle);
+        const y = radius * Math.sin(angle);
         const z = radius * Math.sin(angle);
-        return { x, y: 5, z };
+        return { x, y, z };
       }
 
       function moveLights(lightIds) {
-        for (const lightId of lightIds) {
-          const light = document.getElementById(lightId);
-          const currentPosition = light.getAttribute('position');
-          const newPosition = randomPosition(5);
+        const lightPositions = parseLightPositionsFromHash();
 
-          // Add animation component to the light
+        lightIds.forEach((lightId) => {
+          const light = document.getElementById(lightId);
+          if (!light) return;
+
+          const currentPosition = light.getAttribute('position');
+          const newPosition = randomPosition(8);
           light.setAttribute('animation', {
             property: 'position',
             from: `${currentPosition.x} ${currentPosition.y} ${currentPosition.z}`,
             to: `${newPosition.x} ${newPosition.y} ${newPosition.z}`,
-            dur: 2000,
+            dur: 3000,
             easing: 'easeInOutQuad',
           });
-        }
+
+          // Update the light positions object
+          lightPositions[lightId] = [newPosition.x, newPosition.y, newPosition.z];
+        });
+
+        // Update the URL's hash
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        Object.entries(lightPositions).forEach(([key, value]) => {
+          params.set(key, value.join(','));
+        });
+        window.location.hash = params.toString();
+      }
+
+      function applyLightPositionsFromHash() {
+        const lightPositions = parseLightPositionsFromHash();
+        Object.entries(lightPositions).forEach(([lightId, position]) => {
+          const light = document.getElementById(lightId);
+          if (light) {
+            light.setAttribute('position', { x: position[0], y: position[1], z: position[2] });
+          }
+        });
       }
 
       document.getElementById('move-light-button').addEventListener('click', () => {
@@ -350,8 +412,6 @@
         sky.setAttribute('src', url);
       }
 
-
-
       AFRAME.registerComponent('buttons-events',{
         init: function () {
           this.el.addEventListener('abuttondown', this.loadSky);
@@ -360,15 +420,13 @@
           this.el.addEventListener('ybuttondown', this.changeEnviro);
         },
         loadSky: function(){
-            const skyUrls =['skys/sky1.jpg', 'skys/sky2.jpg', 'skys/sky3.jpg', 'skys/sky4.jpg', 'skys/sky5.jpg', 'skys/sky6.jpg', 'skys/sky7.jpg', 'skys/sky8.jpg', 'skys/sky9.jpg', 'skys/sky10.jpg'];
-            const randomIndex = Math.floor(Math.random() * skyUrls.length);
-            loadSky(skyUrls[randomIndex]);
+            loadNextSky()
         },
         moveLights2: function(){
-          moveLights(['light1', 'light2', 'light3']);
+            moveLights(['light1', 'light2', 'light3']);
         },
         addSuzane: function(){
-          loadModel('sample-models/suzane.glb');
+          loadModel('sample-models/p1x.glb');
         },
         changeEnviro: function(){
           const enviroUrls = ['sample-models/a-vr-enviro-1.glb', 'sample-models/a-vr-enviro-2.glb'];
@@ -377,9 +435,109 @@
         }
       });
 
-        document.getElementById('close-popup').addEventListener('click', () => {
-          document.getElementById('popup-window').style.display = 'none';
+      function loadSkyFromUrlHash() {
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const skyFilename = params.get('sky');
+
+        if (skyFilename) {
+          const skyUrl = `skys/${skyFilename}.jpg`;
+          loadSky(skyUrl);
+        }
+      }
+
+
+      function parseLightPositionsFromHash() {
+        const hash = window.location.hash.slice(1);
+        const params = new URLSearchParams(hash);
+
+        const lightPositions = {};
+        params.forEach((value, key) => {
+          if (key.startsWith('light')) {
+            lightPositions[key] = value.split(',').map(parseFloat);
+          }
         });
+
+        return lightPositions;
+      }
+
+      function restoreCameraControls(){
+        const camera = document.querySelector('#camera');
+        const restore = document.querySelector('#restore-controls');
+        camera.setAttribute('wasd-controls', '');
+        camera.setAttribute('look-controls', '');
+        restore.style.display="none";
+      }
+
+      function loadCameraTransformFromUrlHash() {
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const cameraPositionString = params.get('cameraPosition');
+        const cameraRotationString = params.get('cameraRotation');
+
+        const camera = document.querySelector('#camera');
+        const restore = document.querySelector('#restore-controls');
+        console.log(restore)
+        if (cameraPositionString) {
+          const cameraPosition = AFRAME.utils.coordinates.parse(cameraPositionString);
+          camera.setAttribute('position', cameraPosition);
+          restore.style.display="block";
+        } else {
+          camera.setAttribute('wasd-controls', '');
+        }
+
+        if (cameraRotationString) {
+          const cameraRotation = AFRAME.utils.coordinates.parse(cameraRotationString);
+          camera.setAttribute('rotation', cameraRotation);
+          restore.style.display="block";
+        }else{
+          camera.setAttribute('look-controls', '');
+        }
+      }
+
+      AFRAME.registerComponent('camera-transform-updater', {
+        schema: {
+          tickTimeout: { type: 'int', default: 1000 }
+        },
+
+        init: function () {
+          this.previousPosition = this.el.getAttribute('position');
+          this.previousRotation = this.el.getAttribute('rotation');
+          this.lastUpdate = performance.now();
+        },
+
+        tick: function (time) {
+          const currentPosition = this.el.getAttribute('position');
+          const currentRotation = this.el.getAttribute('rotation');
+          const timeSinceLastUpdate = time - this.lastUpdate;
+          const shouldUpdateHash = timeSinceLastUpdate >= this.data.tickTimeout;
+
+          if (shouldUpdateHash &&
+              (AFRAME.utils.deepEqual(this.previousPosition, currentPosition) ||
+              AFRAME.utils.deepEqual(this.previousRotation, currentRotation))) {
+
+            const params = new URLSearchParams(window.location.hash.slice(1));
+            params.set('cameraPosition', AFRAME.utils.coordinates.stringify(currentPosition));
+            params.set('cameraRotation', AFRAME.utils.coordinates.stringify(currentRotation));
+            window.location.hash = params.toString();
+
+            this.previousPosition = currentPosition;
+            this.previousRotation = currentRotation;
+            this.lastUpdate = time;
+          }
+        }
+      });
+
+
+
+
+      document.getElementById('close-popup').addEventListener('click', () => {
+        document.getElementById('popup-window').style.display = 'none';
+      });
+
+      loadCameraTransformFromUrlHash();
+      loadModelFromUrlHash();
+      loadEnvironmentFromUrlHash();
+      loadSkyFromUrlHash();
+      applyLightPositionsFromHash();
     </script>
   </body>
 </html>
