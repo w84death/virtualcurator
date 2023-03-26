@@ -209,7 +209,8 @@
       <div class="popup-content">
         <h1>Welcome to VirtualCurator</h1>
         <p>Created by:</p>
-        <p>OpenAI's ChatGPT &amp; Krzysztof Krystian Jankowski</p>
+        <p>OpenAI's 🤖 ChatGPT &amp; 👤 Krzysztof Krystian Jankowski</p>
+        <p><small>Special thanks to 👤 Monika Małgorzata Trenerowska<br/>for testing and ideas.</small></p>
         <hr/>
         <button id="enter-app-btn" disabled>Loading...</button>
         <p><small>VERSION <span id="app-version"></span> // <span id="app-date"></span></small></p>
@@ -829,19 +830,37 @@
       window.addEventListener('wheel', handleMouseScroll);
 
 
-      const baseTitle = "VirtualCurator // ";
-      const scrollText = " Welcome to the VirtualCurator app! Enjoy your experience. ";
-      let currentScrollPosition = 0;
+      function startTitleScrolling() {
+        const baseTitle = "VirtualCurator";
+        const scrollText = " - Welcome to the VirtualCurator app! Enjoy your experience. ";
+        let currentScrollPosition = 0;
 
-      function updateTitleScroll() {
-        const visibleText = scrollText.substr(currentScrollPosition, 10);
-        document.title = baseTitle + visibleText;
+        function updateTitleScroll() {
+          const visibleText = scrollText.substr(currentScrollPosition, 10);
+          document.title = baseTitle + visibleText;
 
-        // Increment the current scroll position and wrap around if it exceeds the length of the scrollText
-        currentScrollPosition = (currentScrollPosition + 1) % scrollText.length;
+          // Increment the current scroll position and wrap around if it exceeds the length of the scrollText
+          currentScrollPosition = (currentScrollPosition + 1) % scrollText.length;
+        }
+
+        const scrollInterval = 300; // Scroll speed in milliseconds
+        setInterval(updateTitleScroll, scrollInterval);
       }
-      const scrollInterval = 300; // Scroll speed in milliseconds
-      setInterval(updateTitleScroll, scrollInterval);
+
+      function supportsWebWorkers() {
+        return typeof Worker !== "undefined";
+      }
+
+      if (supportsWebWorkers()) {
+        const titleWorker = new Worker("title-worker.js");
+
+        titleWorker.onmessage = (event) => {
+          document.title = event.data;
+        };
+      } else {
+        console.log("Web workers not supported.");
+        startTitleScrolling();
+      }
 
 
       updateVersion();
