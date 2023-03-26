@@ -104,14 +104,9 @@ body {
       #restore-controls.menu-button.red{
         background-color: #ff2266;
       }
-
       #restore-controls {
-        top:10px;
-        right:10px;
-        left:auto;
-        bottom:auto;
+        bottom: 50px;
       }
-
        #popup-window,
        #popup-window-share{
         position: fixed;
