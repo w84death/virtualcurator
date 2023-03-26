@@ -1,0 +1,268 @@
+{
+"presets":[
+  {
+    "name": "Matte Red",
+    "albedo": "#ff0000",
+    "metallic": 0,
+    "roughness": 1,
+    "transparent": false,
+    "opacity": 1
+  },
+  {
+    "name": "Shiny Gold",
+    "albedo": "#ffd700",
+    "metallic": 1,
+    "roughness": 0.2,
+    "transparent": false,
+    "opacity": 1
+  },
+  {
+    "name": "Glass",
+    "albedo": "#ffffff",
+    "metallic": 0,
+    "roughness": 0,
+    "transparent": true,
+    "opacity": 0.2
+  },
+  {
+      "name": "Matte White",
+      "albedo": "#ffffff",
+      "metallic": 0,
+      "roughness": 1,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Chrome",
+      "albedo": "#ffffff",
+      "metallic": 1,
+      "roughness": 0,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Rubber",
+      "albedo": "#111111",
+      "metallic": 0.1,
+      "roughness": 0.9,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Plastic",
+      "albedo": "#555555",
+      "metallic": 0,
+      "roughness": 0.5,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Copper",
+      "albedo": "#b87333",
+      "metallic": 0.9,
+      "roughness": 0.4,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Wood",
+      "albedo": "#8b4513",
+      "metallic": 0,
+      "roughness": 0.6,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Frosted Glass",
+      "albedo": "#ffffff",
+      "metallic": 0,
+      "roughness": 0.1,
+      "transparent": true,
+      "opacity": 0.6
+    },
+    {
+      "name": "Velvet",
+      "albedo": "#9400d3",
+      "metallic": 0,
+      "roughness": 0.2,
+      "transparent": false,
+      "opacity": 1
+    },
+        {
+      "name": "Hot Pink",
+      "albedo": "#FF69B4",
+      "metallic": 0,
+      "roughness": 0.2,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Lime Green",
+      "albedo": "#32CD32",
+      "metallic": 0,
+      "roughness": 0.2,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Sunny Yellow",
+      "albedo": "#FFD700",
+      "metallic": 0,
+      "roughness": 0.2,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Turquoise",
+      "albedo": "#40E0D0",
+      "metallic": 0,
+      "roughness": 0.2,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Vibrant Orange",
+      "albedo": "#FFA500",
+      "metallic": 0,
+      "roughness": 0.2,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Pastel Pink",
+      "albedo": "#FFC0CB",
+      "metallic": 0,
+      "roughness": 0.5,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Pastel Blue",
+      "albedo": "#ADD8E6",
+      "metallic": 0,
+      "roughness": 0.5,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Pastel Yellow",
+      "albedo": "#FFFFB3",
+      "metallic": 0,
+      "roughness": 0.5,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Pastel Lavender",
+      "albedo": "#E6E6FA",
+      "metallic": 0,
+      "roughness": 0.5,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Pastel Orange",
+      "albedo": "#FFDAB9",
+      "metallic": 0,
+      "roughness": 0.5,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Pastel Mint",
+      "albedo": "#98FF98",
+      "metallic": 0,
+      "roughness": 0.5,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Pastel Peach",
+      "albedo": "#FFE5B4",
+      "metallic": 0,
+      "roughness": 0.5,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Icy Blue",
+      "albedo": "#87CEFA",
+      "metallic": 0.5,
+      "roughness": 0.1,
+      "transparent": true,
+      "opacity": 0.6
+    },
+    {
+      "name": "Crystal Green",
+      "albedo": "#32CD32",
+      "metallic": 0.6,
+      "roughness": 0.1,
+      "transparent": true,
+      "opacity": 0.65
+    },
+    {
+      "name": "Amber",
+      "albedo": "#FFBF00",
+      "metallic": 0.7,
+      "roughness": 0.1,
+      "transparent": true,
+      "opacity": 0.7
+    },
+    {
+      "name": "Rose Quartz",
+      "albedo": "#FF69B4",
+      "metallic": 0.5,
+      "roughness": 0.1,
+      "transparent": true,
+      "opacity": 0.6
+    },
+    {
+      "name": "Purple Gem",
+      "albedo": "#9370DB",
+      "metallic": 0.8,
+      "roughness": 0.1,
+      "transparent": true,
+      "opacity": 0.7
+    },
+     {
+      "name": "Chrome Red",
+      "albedo": "#FF0000",
+      "metallic": 0.9,
+      "roughness": 0.1,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Chrome Blue",
+      "albedo": "#0000FF",
+      "metallic": 0.9,
+      "roughness": 0.1,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Chrome Green",
+      "albedo": "#008000",
+      "metallic": 0.9,
+      "roughness": 0.1,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Chrome Purple",
+      "albedo": "#800080",
+      "metallic": 0.9,
+      "roughness": 0.1,
+      "transparent": false,
+      "opacity": 1
+    },
+    {
+      "name": "Chrome Gold",
+      "albedo": "#FFD700",
+      "metallic": 0.9,
+      "roughness": 0.1,
+      "transparent": false,
+      "opacity": 1
+    }
+  ]
+}
