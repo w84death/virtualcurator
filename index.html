@@ -246,6 +246,7 @@
         <button id="enter-app-btn" disabled>Loading...</button>
         <p><small>VERSION <span id="app-version"></span> // <span id="app-date"></span></small></p>
         <p><small>&copy;2023 P1X</small></p>
+        <p><small>Source code available at <a href="https://github.com/w84death/virtualcurator">github.com/w84death/virtualcurator</a>.</small></p>
       </div>
     </div>
 
@@ -616,6 +617,8 @@
         if (skyFilename) {
           const skyUrl = `skys/${skyFilename}.jpg`;
           loadSky(skyUrl);
+        }else {
+          loadSky(skyImages[currentSkyIndex].url);
         }
       }
 
@@ -835,13 +838,11 @@
         window.location.hash = '';
 
         currentEnvironmentIndex = 0;
-        currentSkyIndex = -1;
+        currentSkyIndex = 0;
         currentModelIndex = 0;
 
-        // loadEnvironment(environmentImages[currentEnvironmentIndex].url);
         loadModel(modelImages[currentModelIndex].url);
-
-        document.querySelector('a-sky').setAttribute('src', '');
+        loadSky(skyImages[currentSkyIndex].url);
 
         blockLook();
         const camera = document.querySelector('#camera');

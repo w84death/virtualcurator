@@ -4,10 +4,6 @@ VirtualCurator is an immersive VR application that allows users to explore and c
 
 ![Welcome screen](welcome.png)
 
-![Screenshot](screen1.png)
-
-![Skys](skys.png)
-
 ## Main Features
 
 * Dynamic Environments: Start with a basic room and swap out environments, including user-uploaded .glb files, to create the perfect exhibition space.
@@ -18,6 +14,10 @@ VirtualCurator is an immersive VR application that allows users to explore and c
 * Collaborative Creation: Developed by OpenAI's ChatGPT and Krzysztof Krystian Jankowski, VirtualCurator brings together advanced AI and human creativity.
 
 Whether you're a professional artist or a casual user looking to explore virtual art spaces, VirtualCurator offers a rich and interactive experience that can be tailored to your preferences.
+
+![Screenshot](screen1.png)
+
+![Skys](skys.png)
 
 ## Try it
 

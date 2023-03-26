@@ -1,6 +1,9 @@
 {
   "skyImages": [
     {
+      "url": "skys/sky0.jpg",
+      "alt": "Clear, white background"
+    },{
       "url": "skys/sky1.jpg",
       "alt": "Sky 1"
     },
