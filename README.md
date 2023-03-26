@@ -2,7 +2,13 @@
 
 VirtualCurator is an immersive VR application that allows users to explore and customize virtual art exhibitions. The application offers a diverse range of functionality and intuitive controls, ensuring an engaging experience for art enthusiasts, designers, and casual users alike.
 
-Main Features:
+![Welcome screen](welcome.png)
+
+![Screenshot](screen1.png)
+
+![Skys](skys.png)
+
+## Main Features
 
 * Dynamic Environments: Start with a basic room and swap out environments, including user-uploaded .glb files, to create the perfect exhibition space.
 * Customizable Art: Add your own 3D models to the scene by simply dragging and dropping .glb files, or choose from a list of sample models.
@@ -13,5 +19,6 @@ Main Features:
 
 Whether you're a professional artist or a casual user looking to explore virtual art spaces, VirtualCurator offers a rich and interactive experience that can be tailored to your preferences.
 
-# Online
-Live version: https://krzysztofjankowski.com/vr/gpt4/
+## Try it
+
+Live version at https://virtualcurator.p1x.in/

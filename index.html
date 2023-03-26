@@ -157,7 +157,7 @@
 
       .panel-drawer.expanded {
         max-height: 700px;
-        width:812px;
+        width:912px;
       }
 
       .panel-drawer img {
@@ -200,6 +200,37 @@
         text-align: center;
       }
 
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+      }
+
+      .loading-spinner {
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        top: calc(50% - 40px);
+        left: calc(50% - 40px);
+        border: 8px solid rgba(255, 255, 255, 0.2);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .hidden {
+        display: none;
+      }
 
     </style>
 
@@ -278,6 +309,10 @@
     </div>
 
 
+    <div id="loading-overlay" class="loading-overlay hidden">
+      <div class="loading-spinner"></div>
+    </div>
+
     <div id="drop-zone-model" class="drop-zone">
       <h1 style="text-align: center; margin-top: 40%;">Drop your model .glb file here</h1>
     </div>
@@ -285,8 +320,9 @@
       <h1 style="text-align: center; margin-top: 40%;">Drop your environment .glb file here</h1>
     </div>
 
+
     <script>
-      const appVersion = 7;
+      const appVersion = 9;
       const appDate = "24-03-2023";
 
       let skyImages, environmentImages, modelImages;
@@ -310,6 +346,7 @@
         // populateEnvironmentList();
         // populateModelList();
         loadCameraTransformFromUrlHash();
+        loadFOVFromHash();
         loadModelFromUrlHash();
         loadEnvironmentFromUrlHash();
         loadSkyFromUrlHash();
@@ -332,8 +369,12 @@
       }
 
       function loadModel(url) {
+        showLoadingOverlay();
         const model = document.getElementById('customModel');
         model.setAttribute('gltf-model', url);
+        model.addEventListener('model-loaded', () => {
+          hideLoadingOverlay();
+        });
       }
 
       function loadModelFromUrlHash() {
@@ -363,8 +404,12 @@
 
 
       function loadEnvironment(url) {
+        showLoadingOverlay();
         const environment = document.getElementById('customEnvironment');
         environment.setAttribute('gltf-model', url);
+        environment.addEventListener('model-loaded', () => {
+          hideLoadingOverlay();
+        });
       }
 
       function loadEnvironmentFromUrlHash() {
@@ -535,8 +580,12 @@
       });
 
       function loadSky(url) {
+        showLoadingOverlay();
         const sky = document.querySelector('a-sky');
         sky.setAttribute('src', url);
+        sky.addEventListener('materialtextureloaded', () => {
+          hideLoadingOverlay();
+        });
       }
 
       AFRAME.registerComponent('buttons-events',{
@@ -789,7 +838,7 @@
         currentSkyIndex = -1;
         currentModelIndex = 0;
 
-        loadEnvironment(environmentImages[currentEnvironmentIndex].url);
+        // loadEnvironment(environmentImages[currentEnvironmentIndex].url);
         loadModel(modelImages[currentModelIndex].url);
 
         document.querySelector('a-sky').setAttribute('src', '');
@@ -825,6 +874,7 @@
 
         // Set the new FOV
         camera.setAttribute('camera', 'fov', newFOV);
+        updateFOVUrlHash();
       }
 
       window.addEventListener('wheel', handleMouseScroll);
@@ -860,6 +910,33 @@
       } else {
         console.log("Web workers not supported.");
         startTitleScrolling();
+      }
+
+      function loadFOVFromHash() {
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const fov = params.get('fov');
+        if (fov){
+          document.querySelector('#camera').setAttribute('camera', 'fov', fov);
+        }
+      }
+
+      function updateFOVUrlHash() {
+        const camera = document.querySelector('#camera');
+        const fov = camera.getAttribute('camera').fov;
+        // Update the URL's hash
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        params.set('fov', fov);
+        window.location.hash = params.toString();
+      }
+
+      function showLoadingOverlay() {
+        const overlay = document.getElementById('loading-overlay');
+        overlay.classList.remove('hidden');
+      }
+
+      function hideLoadingOverlay() {
+        const overlay = document.getElementById('loading-overlay');
+        overlay.classList.add('hidden');
       }
 
 
