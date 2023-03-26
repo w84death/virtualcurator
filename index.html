@@ -2,10 +2,15 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>ChatGPT VR Viewer</title>
-    <meta name="description" content="A simple VR app using A-Frame with a room, a cube, hand tracking controls, hand models, fog, and art exhibition lighting.">
-    <script src="aframe-master.min.js"></script>
+    <title>VirtualCurator</title>
+    <meta name="description" content="An immersive experience where users can explore and interact with different art pieces and environments written by ChatGPT.">
+    <script src="aframe.min.js"></script>
     <style>
+
+      hr {
+        border: 1px dashed #ccc;
+        margin: 2em 0;
+      }
       .drop-zone {
         position: fixed;
         width: 50%;
@@ -72,6 +77,9 @@
       #floating-menu-load .menu-button.share{
         background-color: #22eecc;
       }
+      #floating-menu-load .menu-button.dark {
+        background-color:#0b292f;
+      }
 
       #floating-info-box {
         background-color: rgba(255, 255, 255, 0.3);
@@ -128,17 +136,84 @@
         cursor: pointer;
         border-radius: 4px;
       }
+
+      .popup-content button:disabled {
+        background-color: #cccccc;
+        color: #999999;
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+
+      .panel-drawer {
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+        background-color: white;
+        padding: 10px;
+        transition: max-height 0.3s;
+        overflow: hidden;
+        max-height: 40px;
+      }
+
+      .panel-drawer.expanded {
+        max-height: 700px;
+        width:812px;
+      }
+
+      .panel-drawer img {
+        width:100px;
+        opacity:0.5;
+      }
+
+      .panel-drawer .menu-button {
+        background-color:#0b292f;
+      }
+
+      .panel-drawer button:hover img {
+        opacity:1;
+      }
+
+      .sky-image-list {
+        margin-top: 10px;
+      }
+
+      .sky-image-list button {
+        margin:5px;
+      }
+
+      .sky-image-list ul {
+        margin:0; padding:0;
+      }
+
+      .sky-image-list li {
+        list-style:none;
+        display:inline-block;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .image-title {
+        margin: 5px 0 0;
+        font-size: 12px;
+        text-align: center;
+      }
+
+
     </style>
 
   </head>
   <body>
     <div id="popup-window">
       <div class="popup-content">
-        <h1>Welcome to our VR App</h1>
-        <p><small>VERSION 23-03-2023</small></p>
+        <h1>Welcome to VirtualCurator</h1>
         <p>Created by:</p>
         <p>OpenAI's ChatGPT &amp; Krzysztof Krystian Jankowski</p>
-        <button id="close-popup">Enter the App</button>
+        <hr/>
+        <button id="enter-app-btn" disabled>Loading...</button>
+        <p><small>VERSION <span id="app-version"></span> // <span id="app-date"></span></small></p>
+        <p><small>&copy;2023 P1X</small></p>
       </div>
     </div>
 
@@ -159,10 +234,11 @@
       <!-- Camera setup -->
       <a-entity id="cameraRig" movement-controls="speed: 0.1" position="0 1.6 3">
         <a-entity id="camera" camera position="0 0 0" camera-transform-updater></a-entity>
+        <a-entity id="left-hand" oculus-touch-controls="hand: left" laser-controls="hand: left" raycaster="objects: .teleportable" teleport-controls="cameraRig: cameraRig; teleportOrigin: #camera; button: trackpad;" buttons-events></a-entity>
+      <a-entity id="right-hand" laser-controls="hand: right"  oculus-touch-controls="hand: right" raycaster="objects: .teleportable" teleport-controls="cameraRig: cameraRig; teleportOrigin: #camera;" buttons-events></a-entity>
       </a-entity>
 
-      <a-entity id="left-hand" oculus-touch-controls="hand: left" laser-controls="hand: left" raycaster="objects: .teleportable" teleport-controls="cameraRig: cameraRig; teleportOrigin: #camera; button: trackpad;" buttons-events></a-entity>
-      <a-entity id="right-hand" laser-controls="hand: right"  oculus-touch-controls="hand: right" raycaster="objects: .teleportable" teleport-controls="cameraRig: cameraRig; teleportOrigin: #camera;" buttons-events></a-entity>
+
 
       <a-entity id="customModel" position="0 1 0" scale="1 1 1" shadow="receive:true; cast:true;"></a-entity>
       <a-entity id="customEnvironment" position="0 0 0" scale="1 1 1" shadow="receive:true; cast:false;"></a-entity>
@@ -182,6 +258,7 @@
     </div>
 
     <div id="floating-menu-load">
+      <button class="menu-button dark" id="reset-view-btn">Reset View</button>
       <button class="menu-button red" id="restore-controls" style="display:none;">RESTORE CAMERA CONTROLS</button>
       <button class="menu-button" id="load-model">Load next model</button>
       <button class="menu-button" id="load-enviro">Load next environment</button>
@@ -189,11 +266,16 @@
       <button  class="menu-button share" id="share-view">Share view</button>
     </div>
 
-    <div id="floating-info-box">
-      <p>Source code available at <a href="https://github.com/w84death/ai-vr-viewer">github.com/w84death/ai-vr-viewer</a>.</p>
+    <button id="move-light-button">Move Light</button>
+
+    <div id="panelDrawer" class="panel-drawer collapsed">
+      <button id="expandButton" class="menu-button">Toggle available skys</button>
+      <div id="skyImageList" class="sky-image-list hidden">
+        <p>Those are test skyboxes created using Stable Diffusion. I will choose the best styles and generate final skys.</p>
+        <ul></ul>
+      </div>
     </div>
 
-    <button id="move-light-button">Move Light</button>
 
     <div id="drop-zone-model" class="drop-zone">
       <h1 style="text-align: center; margin-top: 40%;">Drop your model .glb file here</h1>
@@ -203,37 +285,50 @@
     </div>
 
     <script>
-      const environmentImages = [
-        'environments/a-vr-enviro-0.glb',
-        'environments/a-vr-enviro-1.glb',
-        'environments/a-vr-enviro-2.glb',
-      ];
+      const appVersion = 7;
+      const appDate = "24-03-2023";
+
+      let skyImages, environmentImages, modelImages;
       let currentEnvironmentIndex = 0;
-      const skyImages = [
-        'skys/sky1.jpg',
-        'skys/sky2.jpg',
-        'skys/sky3.jpg',
-        'skys/sky4.jpg',
-        'skys/sky5.jpg',
-        'skys/sky6.jpg',
-        'skys/sky7.jpg',
-        'skys/sky8.jpg',
-        'skys/sky9.jpg',
-        'skys/sky10.jpg',
-        'skys/sky11.jpg',
-        'skys/sky12.jpg',
-        'skys/sky13.jpg'
-      ];
       let currentSkyIndex = 0;
-      const modelImages = [
-        'models/p1x.glb',
-        'models/bolt.glb',
-        'models/suzane.glb',
-      ];
       let currentModelIndex = 0;
+
+      async function loadImagesData() {
+        const response = await fetch('imagesData.json');
+        const data = await response.json();
+
+        return data;
+      }
+
+      loadImagesData().then((data) => {
+        skyImages = data.skyImages;
+        environmentImages = data.environmentImages;
+        modelImages = data.modelImages;
+
+        populateSkyImageList();
+        // populateEnvironmentList();
+        // populateModelList();
+        loadCameraTransformFromUrlHash();
+        loadModelFromUrlHash();
+        loadEnvironmentFromUrlHash();
+        loadSkyFromUrlHash();
+        applyLightPositionsFromHash();
+        enableEnterAppButton();
+      });
 
       const dropZoneModel = document.getElementById('drop-zone-model');
       const dropZoneEnvironment = document.getElementById('drop-zone-environment');
+
+      function updateVersion(){
+        document.getElementById('app-version').innerHTML = appVersion;
+        document.getElementById('app-date').innerHTML = appDate;
+      };
+
+      function enableEnterAppButton() {
+        const enterAppButton = document.getElementById('enter-app-btn');
+        enterAppButton.textContent = 'Enter the App';
+        enterAppButton.removeAttribute('disabled');
+      }
 
       function loadModel(url) {
         const model = document.getElementById('customModel');
@@ -248,15 +343,14 @@
           const modelUrl = `models/${modelFilename}.glb`;
           loadModel(modelUrl);
         } else {
-          // Load the default model if no model parameter is provided
-          loadModel(modelImages[currentModelIndex]);
+          loadModel(modelImages[currentModelIndex].url);
         }
       }
 
 
         function loadNextModel() {
           currentModelIndex = (currentModelIndex + 1) % modelImages.length;
-          const nextModelUrl = modelImages[currentModelIndex];
+          const nextModelUrl = modelImages[currentModelIndex].url;
           loadModel(nextModelUrl);
 
           // Update the URL's hash
@@ -280,14 +374,14 @@
           const environmentUrl = `environments/${environmentFilename}.glb`;
           loadEnvironment(environmentUrl);
         } else {
-          loadEnvironment(environmentImages[currentEnvironmentIndex]);
+          loadEnvironment(environmentImages[currentEnvironmentIndex].url);
         }
       }
 
 
       function loadNextSky() {
         currentSkyIndex = (currentSkyIndex + 1) % skyImages.length;
-        const nextSkyUrl = skyImages[currentSkyIndex];
+        const nextSkyUrl = skyImages[currentSkyIndex].url;
         loadSky(nextSkyUrl);
 
         // Update the URL's hash
@@ -297,9 +391,19 @@
         window.location.hash = params.toString();
       }
 
+      function loadExactSky(url) {
+        loadSky(url);
+
+        // Update the URL's hash
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const nextSkyFilename = url.split('/').pop().split('.')[0];
+        params.set('sky', nextSkyFilename);
+        window.location.hash = params.toString();
+      }
+
       function loadNextEnvironment() {
         currentEnvironmentIndex = (currentEnvironmentIndex + 1) % environmentImages.length;
-        const nextEnvironmentUrl = environmentImages[currentEnvironmentIndex];
+        const nextEnvironmentUrl = environmentImages[currentEnvironmentIndex].url;
         loadEnvironment(nextEnvironmentUrl);
 
         // Update the URL's hash
@@ -636,16 +740,111 @@
         }
       }
 
+      function togglePanelDrawer() {
+        const panelDrawer = document.querySelector('#panelDrawer');
+        const skyImageList = document.querySelector('#skyImageList');
+        const isExpanded = panelDrawer.classList.toggle('expanded');
 
-      document.getElementById('close-popup').addEventListener('click', () => {
+        if (isExpanded) {
+          skyImageList.classList.remove('hidden');
+        } else {
+          skyImageList.classList.add('hidden');
+        }
+      }
+
+
+      function populateSkyImageList() {
+        const skyImageList = document.querySelector('#skyImageList ul');
+
+        skyImages.forEach((skyImage) => {
+          const listItem = document.createElement('li');
+          const button = document.createElement('button');
+          const img = document.createElement('img');
+          const title = document.createElement('p');
+
+          button.dataset.skyUrl = skyImage.url;
+          button.classList.add('menu-button');
+          img.src = skyImage.url;
+          img.alt = skyImage.alt;
+          title.textContent = skyImage.alt;
+          title.classList.add('image-title');
+
+          button.appendChild(img);
+          button.appendChild(title);
+          listItem.appendChild(button);
+          skyImageList.appendChild(listItem);
+
+          // Add event listener for the button
+          button.addEventListener('click', () => {
+            loadExactSky(skyImage.url);
+          });
+        });
+      }
+
+      function resetView() {
+        window.location.hash = '';
+
+        currentEnvironmentIndex = 0;
+        currentSkyIndex = -1;
+        currentModelIndex = 0;
+
+        loadEnvironment(environmentImages[currentEnvironmentIndex].url);
+        loadModel(modelImages[currentModelIndex].url);
+
+        document.querySelector('a-sky').setAttribute('src', '');
+
+        blockLook();
+        const camera = document.querySelector('#camera');
+        const cameraPosition = AFRAME.utils.coordinates.parse("0 0 0");
+        const cameraRotation = AFRAME.utils.coordinates.parse("0 0 0");
+        camera.setAttribute('position', cameraPosition);
+        camera.setAttribute('rotation', cameraRotation);
+        restoreLook();
+        restoreControls();
+        document.querySelector('#restore-controls').style.display="none";
+      }
+
+      document.getElementById('reset-view-btn').addEventListener('click', resetView);
+
+      document.querySelector('#expandButton').addEventListener('click', togglePanelDrawer);
+
+      document.getElementById('enter-app-btn').addEventListener('click', () => {
         document.getElementById('popup-window').style.display = 'none';
       });
 
-      loadCameraTransformFromUrlHash();
-      loadModelFromUrlHash();
-      loadEnvironmentFromUrlHash();
-      loadSkyFromUrlHash();
-      applyLightPositionsFromHash();
+      function handleMouseScroll(event) {
+        const camera = document.getElementById('camera');
+        const currentFOV = camera.getAttribute('camera').fov;
+
+        // Adjust the FOV based on the scroll direction
+        let newFOV = currentFOV - event.deltaY * 0.1;
+
+        // Limit the FOV to a reasonable range, e.g., between 20 and 100
+        newFOV = Math.max(20, Math.min(100, newFOV));
+
+        // Set the new FOV
+        camera.setAttribute('camera', 'fov', newFOV);
+      }
+
+      window.addEventListener('wheel', handleMouseScroll);
+
+
+      const baseTitle = "VirtualCurator // ";
+      const scrollText = " Welcome to the VirtualCurator app! Enjoy your experience. ";
+      let currentScrollPosition = 0;
+
+      function updateTitleScroll() {
+        const visibleText = scrollText.substr(currentScrollPosition, 10);
+        document.title = baseTitle + visibleText;
+
+        // Increment the current scroll position and wrap around if it exceeds the length of the scrollText
+        currentScrollPosition = (currentScrollPosition + 1) % scrollText.length;
+      }
+      const scrollInterval = 300; // Scroll speed in milliseconds
+      setInterval(updateTitleScroll, scrollInterval);
+
+
+      updateVersion();
     </script>
   </body>
 </html>
