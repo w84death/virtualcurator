@@ -1,298 +1,31 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>VirtualCurator</title>
-    <meta name="description" content="An immersive experience where users can explore and interact with different art pieces and environments written by ChatGPT.">
-    <script src="aframe.min.js"></script>
-    <style>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VirtualCurator</title>
 
-      hr {
-        border: 1px dashed #ccc;
-        margin: 2em 0;
-      }
-      button {
-        border-radius: 4px;
-      }
-      .drop-zone {
-        position: fixed;
-        width: 50%;
-        height: 100%;
-        border: dashed 4px #888;
-        background-color: rgba(255, 255, 255, 0.5);
-        display: none;
-      }
-      #drop-zone-model {
-        top: 0;
-        left: 0;
-      }
-      #drop-zone-environment {
-        top: 0;
-        right: 0;
-      }
+  <!-- Basic meta tags -->
+  <meta name="description" content="VirtualCurator - A VR app for exploring custom 3D environments and models, created by OpenAI's ChatGPT & Krzysztof Krystian Jankowski.">
 
-      #floating-menu,
-      #floating-menu-load,
-      #floating-info-box{
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
-      #floating-menu-load {
-        left:10px;
-        right:auto;
-      }
-      #floating-menu-load .menu-button {
-        background-color: #79ce12;
-      }
+  <!-- Open Graph protocol tags -->
+  <meta property="og:title" content="VirtualCurator">
+  <meta property="og:description" content="VirtualCurator - A VR app for exploring custom 3D environments and models, created by OpenAI's ChatGPT & Krzysztof Krystian Jankowski.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://virtualcurator.p1x.in">
+  <meta property="og:image" content="https://virtualcurator.p1x.in/preview-image.jpg">
+  <meta property="og:image:alt" content="VirtualCurator preview image">
 
-      #floating-info-box {
-        bottom:10px;
-        left:10px;
-        top:auto;
-        font-size: 10px;
-        color:#222;
-      }
-      #floating-info-box p {
-        margin:0;
-      }
-      #floating-info-box p+p{
-        margin-top:0.75em;
-      }
-      .menu-button {
-        background-color: #4cc3d9;
-        border: none;
-        color: white;
-        padding: 5px 10px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        cursor: pointer;
-      }
+  <!-- Twitter Card tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VirtualCurator">
+  <meta name="twitter:description" content="VirtualCurator - A VR app for exploring custom 3D environments and models, created by OpenAI's ChatGPT & Krzysztof Krystian Jankowski.">
+  <meta name="twitter:image" content="https://virtualcurator.p1x.in/preview-image.jpg">
 
-      #floating-menu-load .menu-button.red{
-        background-color: #ff2266;
-      }
-      #floating-menu-load .menu-button.share{
-        background-color: #22eecc;
-      }
-      #floating-menu-load .menu-button.dark {
-        background-color:#0b292f;
-      }
-
-      #floating-info-box {
-        background-color: rgba(255, 255, 255, 0.3);
-        padding: 10px;
-        border-radius: 5px;
-        max-width: 200px;
-      }
-
-      #move-light-button {
-        position: fixed;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: #4cc3d9;
-        border: none;
-        color: white;
-        padding: 5px 10px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        cursor: pointer;
-      }
-
-       #popup-window,
-       #popup-window-share{
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-      }
-      .popup-content {
-        background-color: white;
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-      }
-      .popup-content button {
-        background-color: #4cc3d9;
-        border: none;
-        color: white;
-        padding: 10px 20px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 4px;
-      }
-
-      .popup-content button:disabled {
-        background-color: #cccccc;
-        color: #999999;
-        cursor: not-allowed;
-        opacity: 0.7;
-      }
-
-      .panel-drawer {
-        position: fixed;
-        bottom: 10px;
-        left: 10px;
-        background-color: white;
-        padding: 10px;
-        transition: max-height 0.3s;
-        overflow: hidden;
-        max-height: 40px;
-      }
-
-      .panel-drawer.expanded {
-        max-height: 700px;
-        width:1042px;
-      }
-
-      .panel-drawer img {
-        width:100px;
-        opacity:0.5;
-      }
-
-      .panel-drawer .menu-button {
-        background-color:#0b292f;
-      }
-
-      .panel-drawer button:hover img {
-        opacity:1;
-      }
-
-      .sky-image-list {
-        margin-top: 10px;
-      }
-
-      .sky-image-list button {
-        margin:5px;
-      }
-
-      .sky-image-list ul {
-        margin:0; padding:0;
-      }
-
-      .sky-image-list li {
-        list-style:none;
-        display:inline-block;
-      }
-
-      .hidden {
-        display: none;
-      }
-
-      .image-title {
-        margin: 5px 0 0;
-        font-size: 12px;
-        text-align: center;
-      }
-
-      .loading-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        z-index: 9999;
-      }
-
-      .loading-spinner {
-        width: 80px;
-        height: 80px;
-        position: absolute;
-        top: calc(50% - 40px);
-        left: calc(50% - 40px);
-        border: 8px solid rgba(255, 255, 255, 0.2);
-        border-top-color: #fff;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
-
-      @keyframes spin {
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      .hidden {
-        display: none;
-      }
-
-      #vignette {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        pointer-events: none;
-        background-image: radial-gradient(circle at center, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.5) 100%);
-        opacity: 0;
-        transition: opacity 0.5s;
-      }
-
-      .material-drawer {
-        position: fixed;
-        top: 0;
-        right: auto;
-        left:50%;
-        bottom:auto;
-        max-width: 640px;
-        height: 400px;
-        max-height: 320px;
-        background-color: rgba(255, 255, 255, 0.9);
-        overflow-y: hidden;
-        transition: transform 0.5s;
-        transform: translateX(-50%);
-        text-align:center;
-      }
-
-      .material-drawer.collapsed {
-        max-height: 30px;
-      }
-
-      .material-button {
-        border-radius: 16px;
-      }
-
-      .material-preset-list,
-      .material-preset-list ul {
-        padding: 0;
-        margin: 0;
-      }
-      .material-preset-list {
-        margin-top: 1em;
-      }
-
-      .material-preset-list li {
-        list-style: none;
-        padding: 5px;
-        display:inline-block;
-      }
-
-      .material-preset-list button {
-        width: 100%;
-        text-align: left;
-      }
-
-    </style>
-
+  <!-- Other tags -->
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="styles.css">
+  <script src="aframe.min.js"></script>
   </head>
   <body>
     <div id="popup-window">
@@ -344,22 +77,15 @@
 
     <div id="vignette"></div>
 
-    <div id="floating-menu">
-
-      <a class="menu-button" href="models/p1x.glb" download="p1x.glb">Download P1X model</a>
-      <a class="menu-button" href="environments/a-vr-enviro-1.glb" download="a-vr-enviro-1.glb">Download Environment 1</a>
-      <a class="menu-button" href="environments/a-vr-enviro-2.glb" download="a-vr-enviro-2.glb">Download Environment 2</a>
-    </div>
-
     <div id="floating-menu-load">
       <button class="menu-button dark" id="reset-view-btn">Reset View</button>
-      <button class="menu-button red" id="restore-controls" style="display:none;">RESTORE CAMERA CONTROLS</button>
       <button class="menu-button" id="load-model">Load next model</button>
       <button class="menu-button" id="load-enviro">Load next environment</button>
       <button class="menu-button" id="load-sky">Load next sky</button>
       <button  class="menu-button share" id="share-view">Share view</button>
     </div>
 
+    <button class="menu-button red" id="restore-controls" style="display:none;">RESTORE CAMERA CONTROLS</button>
     <button id="move-light-button">Move Light</button>
 
     <div id="panelDrawer" class="panel-drawer collapsed">
@@ -391,7 +117,7 @@
 
 
     <script>
-      const appVersion = 18;
+      const appVersion = 20;
       const appDate = "24-03-2023";
 
       let skyImages, environmentImages, modelImages;
