@@ -52,20 +52,44 @@
 
       <!-- Camera setup -->
       <a-entity id="cameraRig" movement-controls="speed: 0.1" position="0 1.6 3">
-        <a-entity id="camera" camera position="0 0 0" camera-transform-updater></a-entity>
-        <a-entity id="left-hand" oculus-touch-controls="hand: left" laser-controls="hand: left" raycaster="objects: .teleportable" teleport-controls="cameraRig: cameraRig; teleportOrigin: #camera; button: trackpad;" buttons-events></a-entity>
-      <a-entity id="right-hand" laser-controls="hand: right"  oculus-touch-controls="hand: right" raycaster="objects: .teleportable" teleport-controls="cameraRig: cameraRig; teleportOrigin: #camera;" buttons-events></a-entity>
+        <a-entity id="camera" camera position="0 0 0" teleport-controls="type: parabolic; collisionEntities: #invisibleFloor;" camera-transform-updater></a-entity>
+        <a-entity id="left-hand" oculus-touch-controls="hand: left;" teleport-controls="type: parabolic; collisionEntities: #invisibleFloor; button: trigger;"></a-entity>
+        <a-entity id="right-hand" oculus-touch-controls="hand: right;" teleport-controls="type: parabolic; collisionEntities: #invisibleFloor; button: trigger;"></a-entity>
+
       </a-entity>
 
+      <a-plane id="invisibleFloor" position="0 0 0" rotation="-90 0 0" width="100" height="100" material="opacity: 0; transparent: true;"></a-plane>
 
+      <!-- Cylinder with panoramic texture -->
+      <a-cylinder
+        id="panoramicCylinder"
+        radius="30"
+        height="40"
+        segments-radial="64"
+        position="0 10 0"
+        material="side: double; shader: flat;"
+        rotation="0 0 0"
+      >
+        <a-cylinder
+          id="floor"
+          radius="30"
+          height="0.01"
+          segments-radial="64"
+          position="0 -14.995 0"
+          material="color: #111"
+        ></a-cylinder>
+      </a-cylinder>
 
       <a-entity id="customModel" position="0 1 0" scale="1 1 1" shadow="receive:true; cast:true;"></a-entity>
       <a-entity id="customEnvironment" position="0 0 0" scale="1 1 1" shadow="receive:true; cast:false;"></a-entity>
 
       <!-- Lighting -->
-      <a-light id="light1" position="-2 4 0" light="type:directional; castShadow:true; color:#FFF; intensity:4; target:#customModel; angle:30;"></a-light>
-      <a-light id="light2" position="2 4 0" light="type:directional; castShadow:true; color:#FFF; intensity:4; target:#customModel; angle:30;"></a-light>
-      <a-light id="light3" position="2 3 2" light="type:directional; castShadow:true; color:#FFF; intensity:4; target:#customModel; angle:160;"></a-light>
+      <a-light id="light1" position="-2 4 0" light="type: directional; intensity: 1; castShadow: true;target:#customModel; angle:30;"></a-entity>
+
+        <a-light id="light2" position="2 4 0" light="type: directional; intensity: 1; castShadow: true; target:#customModel; angle:30;"></a-entity>
+
+        <a-light id="light3" position="2 3 2" light="type: directional; intensity: 2; castShadow: true;target:#customModel; angle:120;"></a-entity>
+
       <a-light type="ambient" color="#AAA" intensity="1"></a-light>
     </a-scene>
 
@@ -76,6 +100,7 @@
       <button class="menu-button" id="load-model">Load next model</button>
       <button class="menu-button" id="load-enviro">Load next environment</button>
       <button class="menu-button" id="load-sky">Load next sky</button>
+      <button class="menu-button" id="swap-panorama">Load next panorama</button>
       <button  class="menu-button share" id="share-view">Share view</button>
     </div>
 
@@ -110,9 +135,9 @@
     </div>
 
     <script>
-      const appVersion = 22;
-      const appDate = "24-03-2023";
+      const appVersion = 47;
+      const appDate = "27-03-2023";
     </script>
-    <script src="virtualcurator.app.js"></script>
+    <script src="virtualcurator.app.js?v=47"></script>
   </body>
 </html>

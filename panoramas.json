@@ -1,0 +1,16 @@
+{
+  "panoramas": [
+    {
+      "name": "Panorama 1",
+      "url": "panoramas/pano_01.jpg"
+    },
+    {
+      "name": "Panorama 2",
+      "url": "panoramas/pano_02.jpg"
+    },
+    {
+      "name": "Panorama 3",
+      "url": "panoramas/pano_01=3.jpg"
+    }
+  ]
+}

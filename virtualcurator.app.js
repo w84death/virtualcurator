@@ -1,5 +1,5 @@
 
-
+      let loading_elements = 0;
       let skyImages, environmentImages, modelImages;
       let currentEnvironmentIndex = 0;
       let currentSkyIndex = 0;
@@ -17,6 +17,7 @@
         environmentImages = data.environmentImages;
         modelImages = data.modelImages;
 
+        loadPanoramas();
         populateSkyImageList();
         loadMaterialPresets();
         loadCameraTransformFromUrlHash();
@@ -519,7 +520,7 @@
 
       function resetView() {
         window.location.hash = '';
-
+       blockLook();
         currentEnvironmentIndex = 0;
         currentSkyIndex = 0;
         currentModelIndex = 0;
@@ -528,7 +529,6 @@
         loadModel(modelImages[currentModelIndex].url);
         loadSky(skyImages[currentSkyIndex].url);
 
-        blockLook();
         const camera = document.querySelector('#camera');
         const cameraPosition = AFRAME.utils.coordinates.parse("0 0 0");
         const cameraRotation = AFRAME.utils.coordinates.parse("0 0 0");
@@ -537,12 +537,12 @@
         restoreLook();
         restoreControls();
         document.querySelector('#restore-controls').style.display="none";
+        hideLoadingOverlay();
       }
 
       document.getElementById('reset-view-btn').addEventListener('click', resetView);
 
       document.querySelector('#expandButton').addEventListener('click', togglePanelDrawer);
-
       document.getElementById('enter-app-btn').addEventListener('click', () => {
         document.getElementById('popup-window').style.display = 'none';
       });
@@ -629,13 +629,17 @@
       }
 
       function showLoadingOverlay() {
+        loading_elements += 1;
         const overlay = document.getElementById('loading-overlay');
         overlay.classList.remove('hidden');
       }
 
       function hideLoadingOverlay() {
+        loading_elements -= 1;
+        if (loading_elements < 1){
         const overlay = document.getElementById('loading-overlay');
         overlay.classList.add('hidden');
+        }
       }
 
       async function loadMaterialPresets() {
@@ -720,5 +724,60 @@
         const b = (rgb >> 0) & 0xff;
         return (r * 299 + g * 587 + b * 114) / 1000;
       }
+
+
+      const customModel = document.querySelector('#customModel');
+      const moveSpeed = 0.1;
+      const rotationSpeed = 2;
+
+      function onLeftJoystickMoved(event) {
+        const x = event.detail.x * moveSpeed;
+        const z = event.detail.y * moveSpeed;
+
+        customModel.object3D.position.x += x;
+        customModel.object3D.position.z += z;
+      }
+
+      function onRightJoystickMoved(event) {
+        const y = event.detail.x * rotationSpeed;
+
+        customModel.object3D.rotation.y += THREE.Math.degToRad(y);
+      }
+
+
+      document.querySelector('#left-hand').addEventListener('thumbstickmoved', onLeftJoystickMoved);
+      document.querySelector('#right-hand').addEventListener('thumbstickmoved', onRightJoystickMoved);
+
+      let panoramaIndex = 0;
+      let panoramas = [];
+
+      async function loadPanoramas() {
+        const response = await fetch('panoramas.json');
+        const data = await response.json();
+        panoramas = data.panoramas;
+      }
+
+      function loadNextPanorama() {
+        if (panoramas.length === 0) return;
+        const scene = document.querySelector("#theScene");
+        const panoramicCylinder = document.getElementById('panoramicCylinder');
+        panoramaIndex = (panoramaIndex + 1) % panoramas.length;
+        const url = panoramas[panoramaIndex].url;
+        if (panoramicCylinder.getAttribute('src') === url ) return;
+        showLoadingOverlay();
+        scene.removeAttribute("reflection");
+        panoramicCylinder.setAttribute('material', 'src', 'url(' + url + ')');
+        panoramicCylinder.addEventListener('materialtextureloaded', () => {
+          hideLoadingOverlay();
+          setTimeout(() => {
+            scene.setAttribute("reflection", "");
+          }, 0);
+        });
+      }
+      document.querySelector('#swap-panorama').addEventListener('click', loadNextPanorama);
+
+
+
+
 
       updateVersion();

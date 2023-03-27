@@ -3,160 +3,74 @@
     {
       "url": "skys/sky0.jpg",
       "alt": "Clear, white background"
-    },{
-      "url": "skys/sky1.jpg",
-      "alt": "Sky 1"
     },
     {
-      "url": "skys/sky2.jpg",
+      "url": "skys/sky50.jpg",
+      "alt": "Sky 50"
+    },
+    {
+      "url": "skys/sky51.jpg",
+      "alt": "Sky 51"
+    },
+    {
+      "url": "skys/sky52.jpg",
       "alt": "Sky 2"
     },
     {
-      "url": "skys/sky3.jpg",
+      "url": "skys/sky53.jpg",
       "alt": "Sky 3"
     },
     {
-      "url": "skys/sky4.jpg",
+      "url": "skys/sky54.jpg",
       "alt": "Sky 4"
     },
     {
-      "url": "skys/sky5.jpg",
+      "url": "skys/sky55.jpg",
       "alt": "Sky 5"
     },
     {
-      "url": "skys/sky6.jpg",
+      "url": "skys/sky56.jpg",
       "alt": "Sky 6"
     },
     {
-      "url": "skys/sky7.jpg",
+      "url": "skys/sky57.jpg",
       "alt": "Sky 7"
     },
     {
-      "url": "skys/sky8.jpg",
+      "url": "skys/sky58.jpg",
       "alt": "Sky 8"
     },
     {
-      "url": "skys/sky9.jpg",
+      "url": "skys/sky59.jpg",
       "alt": "Sky 9"
     },
     {
-      "url": "skys/sky10.jpg",
+      "url": "skys/sky60.jpg",
       "alt": "Sky 10"
     },
     {
-      "url": "skys/sky11.jpg",
+      "url": "skys/sky61.jpg",
       "alt": "Sky 11"
     },
     {
-      "url": "skys/sky12.jpg",
+      "url": "skys/sky62.jpg",
       "alt": "Sky 12"
     },
     {
-      "url": "skys/sky13.jpg",
+      "url": "skys/sky63.jpg",
       "alt": "Sky 13"
     },
     {
-      "url": "skys/sky14.jpg",
+      "url": "skys/sky64.jpg",
       "alt": "Sky 14"
     },
     {
-      "url": "skys/sky15.jpg",
+      "url": "skys/sky65.jpg",
       "alt": "Sky 15"
     },
     {
-      "url": "skys/sky16.jpg",
+      "url": "skys/sky66.jpg",
       "alt": "Sky 16"
-    },
-    {
-      "url": "skys/sky17.jpg",
-      "alt": "Sky 17"
-    },
-    {
-      "url": "skys/sky18.jpg",
-      "alt": "Sky 18"
-    },
-    {
-      "url": "skys/sky19.jpg",
-      "alt": "Sky 19"
-    },
-    {
-      "url": "skys/sky20.jpg",
-      "alt": "Sky 20"
-    },
-    {
-      "url": "skys/sky21.jpg",
-      "alt": "Sky 21"
-    },
-    {
-      "url": "skys/sky22.jpg",
-      "alt": "Sky 22"
-    },
-    {
-      "url": "skys/sky23.jpg",
-      "alt": "Sky 23"
-    },
-    {
-      "url": "skys/sky24.jpg",
-      "alt": "Sky 24"
-    },
-    {
-      "url": "skys/sky25.jpg",
-      "alt": "Sky 25"
-    },
-    {
-      "url": "skys/sky26.jpg",
-      "alt": "Sky 26"
-    },
-    {
-      "url": "skys/sky27.jpg",
-      "alt": "Sky 27"
-    },
-    {
-      "url": "skys/sky28.jpg",
-      "alt": "Sky 28"
-    },
-    {
-      "url": "skys/sky29.jpg",
-      "alt": "Sky 29"
-    },
-    {
-      "url": "skys/sky30.jpg",
-      "alt": "Sky 30"
-    },{
-      "url": "skys/sky31.jpg",
-      "alt": "Sky 31"
-    },
-    {
-      "url": "skys/sky32.jpg",
-      "alt": "Sky 32"
-    },
-    {
-      "url": "skys/sky33.jpg",
-      "alt": "Sky 33"
-    },
-    {
-      "url": "skys/sky34.jpg",
-      "alt": "Sky 34"
-    },
-    {
-      "url": "skys/sky35.jpg",
-      "alt": "Sky 35"
-    },
-    {
-      "url": "skys/sky36.jpg",
-      "alt": "Sky 36"
-    },
-    {
-      "url": "skys/sky37.jpg",
-      "alt": "Sky 37"
-    },
-    {
-      "url": "skys/sky38.jpg",
-      "alt": "Sky 38"
-    },
-    {
-      "url": "skys/sky39.jpg",
-      "alt": "Sky 39"
     },
     {
       "url": "skys/sky40.jpg",
@@ -167,16 +81,20 @@
       "alt": "Sky 41"
     },
     {
-      "url": "skys/sky42.jpg",
-      "alt": "Sky 42"
+      "url": "skys/sky46.jpg",
+      "alt": "Sky 6"
     },
     {
-      "url": "skys/sky43.jpg",
-      "alt": "Sky 43"
+      "url": "skys/sky47.jpg",
+      "alt": "Sky 7"
     },
     {
-      "url": "skys/sky44.jpg",
-      "alt": "Sky 44"
+      "url": "skys/sky48.jpg",
+      "alt": "Sky 8"
+    },
+    {
+      "url": "skys/sky49.jpg",
+      "alt": "Sky 9"
     }
   ],
   "environmentImages": [
