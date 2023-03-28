@@ -18,7 +18,7 @@
 
   <!-- Other tags -->
   <link rel="icon" href="favicon.png">
-  <link rel="stylesheet" href="styles.css?v2">
+  <link rel="stylesheet" href="styles.css?v3">
   <script src="aframe.min.js"></script>
 </head>
 <body>
@@ -44,13 +44,13 @@
       </div>
     </div>
 
-    <a-scene loading-screen="dotsColor: black; backgroundColor: white"
-             renderer="antialias:true; colorManagement:true; physicallyCorrectLights:true; toneMapping:ACESFilmic; highRefreshRate:true;"
-             shadow="castShadow:true; type:pcfsoft;"
+    <a-scene loading-screen="dotsColor:black;backgroundColor:white"
+             renderer="antialias:true;colorManagement:true;physicallyCorrectLights:true;toneMapping:ACESFilmic;highRefreshRate:true;"
+             shadow="castShadow:true;type:pcfsoft;defaultLightsEnabled:false;"
              reflection id="theScene">
+
       <a-sky id="hdr-sky" radius="300"></a-sky>
 
-      <!-- Camera setup -->
       <a-entity id="cameraRig" movement-controls="speed: 0.1" position="0 1.6 3">
         <a-entity id="camera" camera position="0 0 0" teleport-controls="type: parabolic; collisionEntities: #invisibleFloor;" camera-transform-updater></a-entity>
         <a-entity id="left-hand" oculus-touch-controls="hand: left;" teleport-controls="type: parabolic; collisionEntities: #invisibleFloor; button: trigger;"></a-entity>
@@ -58,57 +58,38 @@
 
       </a-entity>
 
-      <a-plane id="invisibleFloor" position="0 0 0" rotation="-90 0 0" width="100" height="100" material="opacity: 0; transparent: true;"></a-plane>
-
-      <!-- Cylinder with panoramic texture -->
       <a-cylinder
-        id="panoramicCylinder"
+        id="virtualProduction"
         radius="30"
         height="40"
         segments-radial="64"
-        position="0 10 0"
+        position="0 15 0"
         material="side: double; shader: flat;"
-        rotation="0 0 0"
-      >
-        <a-cylinder
-          id="floor"
-          radius="30"
-          height="0.01"
-          segments-radial="64"
-          position="0 -14.995 0"
-          material="color: #111"
-        ></a-cylinder>
+        src="url(panoramas/pano_00.jpg);"
+        rotation="0 0 0" visible="false">
       </a-cylinder>
-
-      <a-entity id="customModel" position="0 1 0" scale="1 1 1" shadow="receive:true; cast:true;"></a-entity>
-      <a-entity id="customEnvironment" position="0 0 0" scale="1 1 1" shadow="receive:true; cast:false;"></a-entity>
-
-      <!-- Lighting -->
-      <a-light id="light1" position="-2 4 0" light="type: directional; intensity: 1; castShadow: true;target:#customModel; angle:30;"></a-entity>
-
-        <a-light id="light2" position="2 4 0" light="type: directional; intensity: 1; castShadow: true; target:#customModel; angle:30;"></a-entity>
-
-        <a-light id="light3" position="2 3 2" light="type: directional; intensity: 2; castShadow: true;target:#customModel; angle:120;"></a-entity>
-
-      <a-light type="ambient" color="#AAA" intensity="1"></a-light>
+      <a-plane id="invisibleFloor" position="0 0 0" rotation="-90 0 0" width="100" height="100" material="opacity: 0; transparent: true;"></a-plane>
+      <a-entity id="customModel" position="0 0 0" scale="1 1 1" shadow="receive:false; cast:true;"></a-entity>
+      <a-entity id="customEnvironment" material="side: double; shader: flat;"  position="0 0 0" scale="1 1 1" shadow="receive:true; cast:false;"></a-entity>
     </a-scene>
 
     <div id="vignette"></div>
 
     <div id="floating-menu-load">
       <button class="menu-button dark" id="reset-view-btn">Reset View</button>
-      <button class="menu-button" id="load-model">Load next model</button>
-      <button class="menu-button" id="load-enviro">Load next environment</button>
-      <button class="menu-button" id="load-sky">Load next sky</button>
-      <button class="menu-button" id="swap-panorama">Load next panorama</button>
+      <button class="menu-button" id="load-model">Change model</button>
+      <button class="menu-button" id="load-enviro">Change environment</button>
+      <button class="menu-button" id="load-lights">Change lights</button>
+      <button class="menu-button" id="load-sky">Change skybox</button>
+      <button class="menu-button blue" id="toggle-vp">Toggle Virtual Production</button>
+      <button class="menu-button blue" id="load-panorama">Change panorama</button>
       <button  class="menu-button share" id="share-view">Share view</button>
     </div>
 
     <button class="menu-button red" id="restore-controls" style="display:none;">RESTORE CAMERA CONTROLS</button>
-    <button id="move-light-button">Move Light</button>
 
     <div id="panelDrawer" class="panel-drawer collapsed">
-      <button id="expandButton" class="menu-button">Toggle available skys</button>
+      <button id="expandButton" class="menu-button">SKYS</button>
       <div id="skyImageList" class="sky-image-list hidden">
         <p>Those are test skyboxes created using Stable Diffusion. I will choose the best styles and generate final skys.</p>
         <ul></ul>
@@ -116,7 +97,7 @@
     </div>
 
     <div id="materialDrawer" class="panel-drawer material-drawer collapsed">
-      <button id="materialExpandButton" class="menu-button">Toggle material presets</button>
+      <button id="materialExpandButton" class="menu-button">MATERIALS</button>
       <div id="materialPresetList" class="material-preset-list">
         <ul></ul>
       </div>
@@ -135,9 +116,9 @@
     </div>
 
     <script>
-      const appVersion = 47;
-      const appDate = "27-03-2023";
+      const appVersion = 71;
+      const appDate = "28-03-2023";
     </script>
-    <script src="virtualcurator.app.js?v=47"></script>
+    <script src="virtualcurator.app.js?v=71"></script>
   </body>
 </html>

@@ -1,31 +1,35 @@
 
       let loading_elements = 0;
-      let skyImages, environmentImages, modelImages;
+      let skyImages, environmentModels, modelImages, lightSetups, panoramas;
       let currentEnvironmentIndex = 0;
       let currentSkyIndex = 0;
       let currentModelIndex = 0;
+      let lightSetupIndex = 0;
+      let panoramaIndex = 0;
 
-      async function loadImagesData() {
-        const response = await fetch('imagesData.json');
+      async function loadConfigData() {
+        const response = await fetch('config.json');
         const data = await response.json();
 
         return data;
       }
 
-      loadImagesData().then((data) => {
-        skyImages = data.skyImages;
-        environmentImages = data.environmentImages;
-        modelImages = data.modelImages;
+      loadConfigData().then((data) => {
+        skyImages = data.skys;
+        environmentModels = data.environments;
+        modelImages = data.models;
+        lightSetups = data.lights;
+        panoramas = data.panoramas;
 
-        loadPanoramas();
         populateSkyImageList();
         loadMaterialPresets();
         loadCameraTransformFromUrlHash();
         loadFOVFromHash();
         loadModelFromUrlHash();
         loadEnvironmentFromUrlHash();
+        loadSettingsFromUrlHash();
         loadSkyFromUrlHash();
-        applyLightPositionsFromHash();
+        loadNextLightSetup();
         enableEnterAppButton();
       });
 
@@ -67,6 +71,14 @@
       }
 
 
+      function loadSettingsFromUrlHash() {
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const vp = params.get('vp');
+        const virtualProduction = document.getElementById('virtualProduction');
+        virtualProduction.setAttribute('visible', vp);
+      }
+
+
         function loadNextModel() {
           currentModelIndex = (currentModelIndex + 1) % modelImages.length;
           const nextModelUrl = modelImages[currentModelIndex].url;
@@ -97,7 +109,7 @@
           const environmentUrl = `environments/${environmentFilename}.glb`;
           loadEnvironment(environmentUrl);
         } else {
-          loadEnvironment(environmentImages[currentEnvironmentIndex].url);
+          loadEnvironment(environmentModels[currentEnvironmentIndex].url);
         }
       }
 
@@ -125,8 +137,8 @@
       }
 
       function loadNextEnvironment() {
-        currentEnvironmentIndex = (currentEnvironmentIndex + 1) % environmentImages.length;
-        const nextEnvironmentUrl = environmentImages[currentEnvironmentIndex].url;
+        currentEnvironmentIndex = (currentEnvironmentIndex + 1) % environmentModels.length;
+        const nextEnvironmentUrl = environmentModels[currentEnvironmentIndex].url;
         loadEnvironment(nextEnvironmentUrl);
 
         // Update the URL's hash
@@ -205,57 +217,6 @@
         }
       });
 
-      function randomPosition(radius) {
-        const angle = Math.random() * 2 * Math.PI;
-        const x = radius * Math.cos(angle);
-        const y = radius * Math.sin(angle);
-        const z = radius * Math.sin(angle);
-        return { x, y, z };
-      }
-
-      function moveLights(lightIds) {
-        const lightPositions = parseLightPositionsFromHash();
-
-        lightIds.forEach((lightId) => {
-          const light = document.getElementById(lightId);
-          if (!light) return;
-
-          const currentPosition = light.getAttribute('position');
-          const newPosition = randomPosition(8);
-          light.setAttribute('animation', {
-            property: 'position',
-            from: `${currentPosition.x} ${currentPosition.y} ${currentPosition.z}`,
-            to: `${newPosition.x} ${newPosition.y} ${newPosition.z}`,
-            dur: 3000,
-            easing: 'easeInOutQuad',
-          });
-
-          // Update the light positions object
-          lightPositions[lightId] = [newPosition.x, newPosition.y, newPosition.z];
-        });
-
-        // Update the URL's hash
-        const params = new URLSearchParams(window.location.hash.slice(1));
-        Object.entries(lightPositions).forEach(([key, value]) => {
-          params.set(key, value.join(','));
-        });
-        window.location.hash = params.toString();
-      }
-
-      function applyLightPositionsFromHash() {
-        const lightPositions = parseLightPositionsFromHash();
-        Object.entries(lightPositions).forEach(([lightId, position]) => {
-          const light = document.getElementById(lightId);
-          if (light) {
-            light.setAttribute('position', { x: position[0], y: position[1], z: position[2] });
-          }
-        });
-      }
-
-      document.getElementById('move-light-button').addEventListener('click', () => {
-        moveLights(['light1', 'light2', 'light3']);
-      });
-
       function loadSky(url) {
         const scene = document.querySelector("#theScene");
         const sky = document.querySelector('a-sky');
@@ -302,21 +263,6 @@
         }else {
           loadSky(skyImages[currentSkyIndex].url);
         }
-      }
-
-
-      function parseLightPositionsFromHash() {
-        const hash = window.location.hash.slice(1);
-        const params = new URLSearchParams(hash);
-
-        const lightPositions = {};
-        params.forEach((value, key) => {
-          if (key.startsWith('light')) {
-            lightPositions[key] = value.split(',').map(parseFloat);
-          }
-        });
-
-        return lightPositions;
       }
 
       function restoreCameraControls(){
@@ -525,9 +471,10 @@
         currentSkyIndex = 0;
         currentModelIndex = 0;
 
-        loadEnvironment(environmentImages[currentEnvironmentIndex].url)
+        loadEnvironment(environmentModels[currentEnvironmentIndex].url)
         loadModel(modelImages[currentModelIndex].url);
         loadSky(skyImages[currentSkyIndex].url);
+        document.querySelector('#virtualProduction').setAttribute('visible', false);
 
         const camera = document.querySelector('#camera');
         const cameraPosition = AFRAME.utils.coordinates.parse("0 0 0");
@@ -748,35 +695,77 @@
       document.querySelector('#left-hand').addEventListener('thumbstickmoved', onLeftJoystickMoved);
       document.querySelector('#right-hand').addEventListener('thumbstickmoved', onRightJoystickMoved);
 
-      let panoramaIndex = 0;
-      let panoramas = [];
-
-      async function loadPanoramas() {
-        const response = await fetch('panoramas.json');
-        const data = await response.json();
-        panoramas = data.panoramas;
-      }
-
-      function loadNextPanorama() {
-        if (panoramas.length === 0) return;
-        const scene = document.querySelector("#theScene");
-        const panoramicCylinder = document.getElementById('panoramicCylinder');
-        panoramaIndex = (panoramaIndex + 1) % panoramas.length;
-        const url = panoramas[panoramaIndex].url;
-        if (panoramicCylinder.getAttribute('src') === url ) return;
+      function loadPanorama(url){
+        const model = document.querySelector('#virtualProduction');
+        if (model.getAttribute('src') === url ) return;
         showLoadingOverlay();
+        const scene = document.querySelector("#theScene");
         scene.removeAttribute("reflection");
-        panoramicCylinder.setAttribute('material', 'src', 'url(' + url + ')');
-        panoramicCylinder.addEventListener('materialtextureloaded', () => {
+        model.setAttribute('material', 'src', 'url(' + url + ')');
+        model.addEventListener('materialtextureloaded', () => {
           hideLoadingOverlay();
           setTimeout(() => {
             scene.setAttribute("reflection", "");
           }, 0);
         });
       }
-      document.querySelector('#swap-panorama').addEventListener('click', loadNextPanorama);
 
+      function loadNextPanorama() {
+        if (panoramas.length === 0) return;
+        panoramaIndex = (panoramaIndex + 1) % panoramas.length;
+        const url = panoramas[panoramaIndex].url;
 
+        loadPanorama(url);
+      }
+
+      function toggleVirtualProduction() {
+        const scene = document.querySelector("#theScene");
+        const virtualProduction = document.querySelector('#virtualProduction');
+        const showVP = !virtualProduction.getAttribute('visible');
+        virtualProduction.setAttribute('visible', showVP);
+        scene.removeAttribute("reflection");
+        setTimeout(() => {
+          scene.setAttribute("reflection", "");
+        }, 0);
+
+        document.querySelector('#load-panorama').style.display=showVP? 'block':'none';
+        // Update the URL's hash
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        params.set('vp', showVP);
+        window.location.hash = params.toString();
+      }
+
+      document.querySelector('#load-panorama').addEventListener('click', loadNextPanorama);
+      document.querySelector('#toggle-vp').addEventListener('click', toggleVirtualProduction);
+
+      function loadNextLightSetup() {
+        if (lightSetups.length === 0) return;
+
+        lightSetupIndex = (lightSetupIndex + 1) % lightSetups.length;
+        const setup = lightSetups[lightSetupIndex];
+
+        // Remove existing lights
+        let existingLights = document.querySelectorAll('.light');
+        existingLights.forEach(light => light.parentNode.removeChild(light));
+
+        // Add new lights
+        setup.lights.forEach(light => {
+          const newLight = document.createElement('a-light');
+          newLight.classList.add('light');
+          newLight.setAttribute('type', light.type);
+          newLight.setAttribute('position', light.position);
+          newLight.setAttribute('intensity', light.intensity);
+          newLight.setAttribute('color', light.color);
+          newLight.setAttribute('target', light.target);
+          newLight.castShadow =  true;
+          newLight.shadowMapHeight = "2048";
+          newLight.shadowMapWidth = "2048";
+          const scene = document.querySelector('a-scene');
+          scene.appendChild(newLight);
+        });
+      }
+
+      document.querySelector('#load-lights').addEventListener('click',loadNextLightSetup);
 
 
 

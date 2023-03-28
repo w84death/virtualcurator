@@ -41,9 +41,6 @@ body {
         left:10px;
         right:auto;
       }
-      #floating-menu-load .menu-button {
-        background-color: #79ce12;
-      }
 
       #floating-info-box {
         bottom:10px;
@@ -59,7 +56,7 @@ body {
         margin-top:0.75em;
       }
       .menu-button {
-        background-color: #4cc3d9;
+        background-color: #235573;
         border: none;
         color: white;
         padding: 5px 10px;
@@ -70,6 +67,9 @@ body {
         cursor: pointer;
       }
 
+      #floating-menu-load .menu-button.blue {
+        background-color: #1288ce;
+      }
 
       #floating-menu-load .menu-button.share{
         background-color: #22eecc;
@@ -85,8 +85,7 @@ body {
         max-width: 200px;
       }
 
-      #move-light-button,
-      #restore-controls {
+    #restore-controls {
         position: fixed;
         bottom: 10px;
         left: 50%;

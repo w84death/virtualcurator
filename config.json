@@ -1,0 +1,202 @@
+{
+  "skys": [
+    {
+      "url": "skys/sky0.jpg",
+      "alt": "Clear, white background"
+    },
+    {
+      "url": "skys/sky50.jpg",
+      "alt": "Sky 50"
+    },
+    {
+      "url": "skys/sky51.jpg",
+      "alt": "Sky 51"
+    },
+    {
+      "url": "skys/sky52.jpg",
+      "alt": "Sky 2"
+    },
+    {
+      "url": "skys/sky53.jpg",
+      "alt": "Sky 3"
+    },
+    {
+      "url": "skys/sky54.jpg",
+      "alt": "Sky 4"
+    },
+    {
+      "url": "skys/sky55.jpg",
+      "alt": "Sky 5"
+    },
+    {
+      "url": "skys/sky56.jpg",
+      "alt": "Sky 6"
+    },
+    {
+      "url": "skys/sky57.jpg",
+      "alt": "Sky 7"
+    },
+    {
+      "url": "skys/sky58.jpg",
+      "alt": "Sky 8"
+    },
+    {
+      "url": "skys/sky59.jpg",
+      "alt": "Sky 9"
+    },
+    {
+      "url": "skys/sky60.jpg",
+      "alt": "Sky 10"
+    },
+    {
+      "url": "skys/sky61.jpg",
+      "alt": "Sky 11"
+    },
+    {
+      "url": "skys/sky62.jpg",
+      "alt": "Sky 12"
+    },
+    {
+      "url": "skys/sky63.jpg",
+      "alt": "Sky 13"
+    },
+    {
+      "url": "skys/sky64.jpg",
+      "alt": "Sky 14"
+    },
+    {
+      "url": "skys/sky65.jpg",
+      "alt": "Sky 15"
+    },
+    {
+      "url": "skys/sky66.jpg",
+      "alt": "Sky 16"
+    },
+    {
+      "url": "skys/sky40.jpg",
+      "alt": "Sky 40"
+    },
+    {
+      "url": "skys/sky41.jpg",
+      "alt": "Sky 41"
+    },
+    {
+      "url": "skys/sky46.jpg",
+      "alt": "Sky 6"
+    },
+    {
+      "url": "skys/sky47.jpg",
+      "alt": "Sky 7"
+    },
+    {
+      "url": "skys/sky48.jpg",
+      "alt": "Sky 8"
+    },
+    {
+      "url": "skys/sky49.jpg",
+      "alt": "Sky 9"
+    }
+  ],
+  "environments": [
+    {
+      "url": "environments/sm_floor-circular.glb",
+      "alt": "Basic environment"
+    },
+    {
+      "url": "environments/sm_floor-portrait.glb",
+      "alt": "Portrait"
+    },
+    {
+      "url": "environments/sm_stage.glb",
+      "alt": "Stage"
+    }
+  ],
+  "models": [
+    {
+      "url": "models/cube.glb",
+      "alt": "P1X Logo"
+    },
+    {
+      "url": "models/p1x.glb",
+      "alt": "P1X Logo"
+    },
+    {
+      "url": "models/SM_P1X_Box.glb",
+      "alt": "SM_P1X_Box"
+    },
+    {
+      "url": "models/sm_space_taxi.glb",
+      "alt": "sm_space_taxi"
+    }
+  ],
+  "panoramas": [
+    {
+      "name": "Panorama 1",
+      "url": "panoramas/pano_01.jpg"
+    },
+    {
+      "name": "Panorama 3",
+      "url": "panoramas/pano_03.jpg"
+    },
+    {
+      "name": "Panorama 4",
+      "url": "panoramas/pano_04.jpg"
+    },
+    {
+      "name": "Panorama 5",
+      "url": "panoramas/pano_05.jpg"
+    }
+  ],
+  "lights": [
+    {
+      "name": "Key Light",
+      "lights": [
+        {
+          "type": "spot",
+          "position": "2 2 1.2",
+          "intensity": 1,
+          "color": "#ffffff",
+          "target": "#customModel"
+        }
+      ]
+    },
+    {
+      "name": "Three Point Lighting",
+      "lights": [
+        {
+          "type": "point",
+          "position": "2 2 1.2",
+          "intensity": 1.4,
+          "color": "#ffffff",
+          "target": "#customModel"
+        },
+        {
+          "type": "point",
+          "position": "-3 1 2",
+          "intensity": 0.5,
+          "color": "#ffffff",
+          "target": "#customModel"
+        },
+        {
+          "type": "point",
+          "position": "0 2 -4",
+          "intensity": 0.5,
+          "color": "#ffffff",
+          "target": "#customModel"
+        }
+      ]
+    },
+    {
+      "name": "Top Light",
+      "lights": [
+        {
+          "type": "directional",
+          "position": "0 3 0",
+          "intensity": 1,
+          "color": "#ffffff",
+          "target": "#customModel"
+        }
+      ]
+    }
+  ]
+}
