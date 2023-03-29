@@ -29,7 +29,6 @@
         loadEnvironmentFromUrlHash();
         loadSettingsFromUrlHash();
         loadSkyFromUrlHash();
-        loadNextLightSetup();
         enableEnterAppButton();
       });
 
@@ -475,12 +474,17 @@
         loadModel(modelImages[currentModelIndex].url);
         loadSky(skyImages[currentSkyIndex].url);
         document.querySelector('#virtualProduction').setAttribute('visible', false);
-
+        document.querySelector('#load-panorama').style.display='none';
+        const scene = document.querySelector("#theScene");
+        scene.removeAttribute("reflection");
         const camera = document.querySelector('#camera');
         const cameraPosition = AFRAME.utils.coordinates.parse("0 0 0");
         const cameraRotation = AFRAME.utils.coordinates.parse("0 0 0");
         camera.setAttribute('position', cameraPosition);
         camera.setAttribute('rotation', cameraRotation);
+        setTimeout(() => {
+          scene.setAttribute("reflection", "");
+        }, 0);
         restoreLook();
         restoreControls();
         document.querySelector('#restore-controls').style.display="none";
@@ -719,10 +723,11 @@
       }
 
       function toggleVirtualProduction() {
-        const scene = document.querySelector("#theScene");
+
         const virtualProduction = document.querySelector('#virtualProduction');
         const showVP = !virtualProduction.getAttribute('visible');
         virtualProduction.setAttribute('visible', showVP);
+        const scene = document.querySelector("#theScene");
         scene.removeAttribute("reflection");
         setTimeout(() => {
           scene.setAttribute("reflection", "");
@@ -757,16 +762,13 @@
           newLight.setAttribute('intensity', light.intensity);
           newLight.setAttribute('color', light.color);
           newLight.setAttribute('target', light.target);
-          newLight.castShadow =  true;
-          newLight.shadowMapHeight = "2048";
-          newLight.shadowMapWidth = "2048";
+          newLight.setAttribute('castShadow', true);
           const scene = document.querySelector('a-scene');
           scene.appendChild(newLight);
         });
       }
 
       document.querySelector('#load-lights').addEventListener('click',loadNextLightSetup);
-
 
 
       updateVersion();

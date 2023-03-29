@@ -18,7 +18,7 @@
 
   <!-- Other tags -->
   <link rel="icon" href="favicon.png">
-  <link rel="stylesheet" href="styles.css?v3">
+  <link rel="stylesheet" href="styles.css?v4">
   <script src="aframe.min.js"></script>
 </head>
 <body>
@@ -71,6 +71,10 @@
       <a-plane id="invisibleFloor" position="0 0 0" rotation="-90 0 0" width="100" height="100" material="opacity: 0; transparent: true;"></a-plane>
       <a-entity id="customModel" position="0 0 0" scale="1 1 1" shadow="receive:false; cast:true;"></a-entity>
       <a-entity id="customEnvironment" material="side: double; shader: flat;"  position="0 0 0" scale="1 1 1" shadow="receive:true; cast:false;"></a-entity>
+
+      <a-light light="type: point; color: #FFF; intensity: 3; target:#customModel; castShadow:true;" position="3.5 2.5 3"></a-light>
+      <a-light light="type: point; color: #FFF; intensity: 2 target:#customModel; castShadow:true;" position="-4 1 3"></a-light>
+      <a-light light="type: point; color: #FFF; intensity: 0.5 target:#customModel; castShadow:true;" position="0 2 -4"></a-light>
     </a-scene>
 
     <div id="vignette"></div>
@@ -79,7 +83,7 @@
       <button class="menu-button dark" id="reset-view-btn">Reset View</button>
       <button class="menu-button" id="load-model">Change model</button>
       <button class="menu-button" id="load-enviro">Change environment</button>
-      <button class="menu-button" id="load-lights">Change lights</button>
+      <button class="menu-button" id="load-lights" disabled>Change lights</button>
       <button class="menu-button" id="load-sky">Change skybox</button>
       <button class="menu-button blue" id="toggle-vp">Toggle Virtual Production</button>
       <button class="menu-button blue" id="load-panorama">Change panorama</button>
@@ -116,9 +120,9 @@
     </div>
 
     <script>
-      const appVersion = 71;
-      const appDate = "28-03-2023";
+      const appVersion = 75;
+      const appDate = "29-03-2023";
     </script>
-    <script src="virtualcurator.app.js?v=71"></script>
+    <script src="virtualcurator.app.js?v=75"></script>
   </body>
 </html>
