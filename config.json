@@ -2,149 +2,353 @@
   "skys": [
     {
       "url": "skys/sky0.jpg",
-      "alt": "Clear, white background"
+      "thumb": "skys/sky0_thumb.jpg",
+      "name": "Clear, white background"
     },
     {
       "url": "skys/sky50.jpg",
-      "alt": "Sky 50"
+      "thumb": "skys/sky50_thumb.jpg",
+      "name": "Sky 50"
     },
     {
       "url": "skys/sky51.jpg",
-      "alt": "Sky 51"
+       "thumb": "skys/sky51_thumb.jpg",
+      "name": "Sky 51"
     },
     {
       "url": "skys/sky52.jpg",
-      "alt": "Sky 2"
+       "thumb": "skys/sky52_thumb.jpg",
+      "name": "Sky 52"
     },
     {
       "url": "skys/sky53.jpg",
-      "alt": "Sky 3"
+       "thumb": "skys/sky53_thumb.jpg",
+      "name": "Sky 53"
     },
     {
       "url": "skys/sky54.jpg",
-      "alt": "Sky 4"
+       "thumb": "skys/sky54_thumb.jpg",
+      "name": "Sky 54"
     },
     {
       "url": "skys/sky55.jpg",
-      "alt": "Sky 5"
+       "thumb": "skys/sky55_thumb.jpg",
+      "name": "Sky 55"
     },
     {
       "url": "skys/sky56.jpg",
-      "alt": "Sky 6"
+       "thumb": "skys/sky56_thumb.jpg",
+      "name": "Sky 56"
     },
     {
       "url": "skys/sky57.jpg",
-      "alt": "Sky 7"
+       "thumb": "skys/sky57_thumb.jpg",
+      "name": "Sky 57"
     },
     {
       "url": "skys/sky58.jpg",
-      "alt": "Sky 8"
+       "thumb": "skys/sky58_thumb.jpg",
+      "name": "Sky 58"
     },
     {
       "url": "skys/sky59.jpg",
-      "alt": "Sky 9"
+       "thumb": "skys/sky59_thumb.jpg",
+      "name": "Sky 59"
     },
     {
       "url": "skys/sky60.jpg",
-      "alt": "Sky 10"
+       "thumb": "skys/sky60_thumb.jpg",
+      "name": "Sky 60"
     },
     {
       "url": "skys/sky61.jpg",
-      "alt": "Sky 11"
+       "thumb": "skys/sky61_thumb.jpg",
+      "name": "Sky 61"
     },
     {
       "url": "skys/sky62.jpg",
-      "alt": "Sky 12"
+       "thumb": "skys/sky62_thumb.jpg",
+      "name": "Sky 62"
     },
     {
       "url": "skys/sky63.jpg",
-      "alt": "Sky 13"
+       "thumb": "skys/sky63_thumb.jpg",
+      "name": "Sky 63"
     },
     {
       "url": "skys/sky64.jpg",
-      "alt": "Sky 14"
+       "thumb": "skys/sky64_thumb.jpg",
+      "name": "Sky 64"
     },
     {
       "url": "skys/sky65.jpg",
-      "alt": "Sky 15"
+       "thumb": "skys/sky65_thumb.jpg",
+      "name": "Sky 65"
     },
     {
       "url": "skys/sky66.jpg",
-      "alt": "Sky 16"
+       "thumb": "skys/sky66_thumb.jpg",
+      "name": "Sky 66"
     },
     {
       "url": "skys/sky40.jpg",
-      "alt": "Sky 40"
+       "thumb": "skys/sky40_thumb.jpg",
+      "name": "Sky 40"
     },
     {
       "url": "skys/sky41.jpg",
-      "alt": "Sky 41"
+       "thumb": "skys/sky41_thumb.jpg",
+      "name": "Sky 41"
     },
     {
       "url": "skys/sky46.jpg",
-      "alt": "Sky 6"
+       "thumb": "skys/sky46_thumb.jpg",
+      "name": "Sky 46"
     },
     {
       "url": "skys/sky47.jpg",
-      "alt": "Sky 7"
+       "thumb": "skys/sky47_thumb.jpg",
+      "name": "Sky 47"
     },
     {
       "url": "skys/sky48.jpg",
-      "alt": "Sky 8"
+       "thumb": "skys/sky48_thumb.jpg",
+      "name": "Sky 48"
     },
     {
       "url": "skys/sky49.jpg",
-      "alt": "Sky 9"
+       "thumb": "skys/sky49_thumb.jpg",
+      "name": "Sky 49"
     }
   ],
   "environments": [
     {
       "url": "environments/sm_floor-circular.glb",
-      "alt": "Basic environment"
+      "thumb": "environments/sm_floor-circular.jpg",
+      "name": "Basic environment"
     },
     {
       "url": "environments/sm_floor-portrait.glb",
-      "alt": "Portrait"
+      "thumb": "environments/sm_floor-portrait.jpg",
+      "name": "Portrait"
     },
     {
       "url": "environments/sm_stage.glb",
-      "alt": "Stage"
+      "thumb": "environments/sm_stage.jpg",
+      "name": "Stage"
     }
   ],
   "models": [
     {
       "url": "models/cube.glb",
-      "alt": "P1X Logo"
+      "thumb": "models/cube.jpg",
+      "name": "P1X Logo"
     },
     {
       "url": "models/p1x.glb",
-      "alt": "P1X Logo"
+      "thumb": "models/p1x.jpg",
+      "name": "P1X Logo"
     },
     {
       "url": "models/SM_P1X_Box.glb",
-      "alt": "SM_P1X_Box"
+      "thumb": "models/SM_P1X_Box.jpg",
+      "name": "SM_P1X_Box"
     },
     {
       "url": "models/sm_space_taxi.glb",
-      "alt": "sm_space_taxi"
+      "thumb": "models/sm_space_taxi.jpg",
+      "name": "sm_space_taxi"
     }
   ],
   "panoramas": [
     {
-      "name": "Panorama 1",
-      "url": "panoramas/pano_01.jpg"
+      "name": "Panorama 0",
+      "thumb": "panoramas/pano_00_thumb.jpg",
+      "url": "panoramas/pano_00.jpg"
+    },{
+      "name": "Panorama 6",
+      "thumb": "panoramas/pano_06_thumb.jpg",
+      "url": "panoramas/pano_06.jpg"
     },
     {
-      "name": "Panorama 3",
-      "url": "panoramas/pano_03.jpg"
+      "name": "Panorama 7",
+      "thumb": "panoramas/pano_07_thumb.jpg",
+      "url": "panoramas/pano_07.jpg"
     },
     {
-      "name": "Panorama 4",
-      "url": "panoramas/pano_04.jpg"
+      "name": "Panorama 8",
+      "thumb": "panoramas/pano_08_thumb.jpg",
+      "url": "panoramas/pano_08.jpg"
     },
     {
-      "name": "Panorama 5",
-      "url": "panoramas/pano_05.jpg"
+      "name": "Panorama 9",
+      "thumb": "panoramas/pano_09_thumb.jpg",
+      "url": "panoramas/pano_09.jpg"
+    },
+    {
+      "name": "Panorama 10",
+      "thumb": "panoramas/pano_10_thumb.jpg",
+      "url": "panoramas/pano_10.jpg"
+    },
+    {
+      "name": "Panorama 11",
+      "thumb": "panoramas/pano_11_thumb.jpg",
+      "url": "panoramas/pano_11.jpg"
+    },
+    {
+      "name": "Panorama 12",
+      "thumb": "panoramas/pano_12_thumb.jpg",
+      "url": "panoramas/pano_12.jpg"
+    },
+    {
+      "name": "Panorama 13",
+      "thumb": "panoramas/pano_13_thumb.jpg",
+      "url": "panoramas/pano_13.jpg"
+    },
+    {
+      "name": "Panorama 14",
+      "thumb": "panoramas/pano_14_thumb.jpg",
+      "url": "panoramas/pano_14.jpg"
+    },
+    {
+      "name": "Panorama 15",
+      "thumb": "panoramas/pano_15_thumb.jpg",
+      "url": "panoramas/pano_15.jpg"
+    },
+    {
+      "name": "Panorama 16",
+      "thumb": "panoramas/pano_16_thumb.jpg",
+      "url": "panoramas/pano_16.jpg"
+    },
+    {
+      "name": "Panorama 17",
+      "thumb": "panoramas/pano_17_thumb.jpg",
+      "url": "panoramas/pano_17.jpg"
+    },
+    {
+      "name": "Panorama 18",
+      "thumb": "panoramas/pano_18_thumb.jpg",
+      "url": "panoramas/pano_18.jpg"
+    },
+    {
+      "name": "Panorama 19",
+      "thumb": "panoramas/pano_19_thumb.jpg",
+      "url": "panoramas/pano_19.jpg"
+    },
+    {
+      "name": "Panorama 20",
+      "thumb": "panoramas/pano_20_thumb.jpg",
+      "url": "panoramas/pano_20.jpg"
+    },
+    {
+      "name": "Panorama 21",
+      "thumb": "panoramas/pano_21_thumb.jpg",
+      "url": "panoramas/pano_21.jpg"
+    },
+    {
+      "name": "Panorama 22",
+      "thumb": "panoramas/pano_22_thumb.jpg",
+      "url": "panoramas/pano_22.jpg"
+    },
+    {
+      "name": "Panorama 23",
+      "thumb": "panoramas/pano_23_thumb.jpg",
+      "url": "panoramas/pano_23.jpg"
+    },
+    {
+      "name": "Panorama 24",
+      "thumb": "panoramas/pano_24_thumb.jpg",
+      "url": "panoramas/pano_24.jpg"
+    },
+    {
+      "name": "Panorama 25",
+      "thumb": "panoramas/pano_25_thumb.jpg",
+      "url": "panoramas/pano_25.jpg"
+    },
+    {
+      "name": "Panorama 26",
+      "thumb": "panoramas/pano_26_thumb.jpg",
+      "url": "panoramas/pano_26.jpg"
+    },
+    {
+      "name": "Panorama 27",
+      "thumb": "panoramas/pano_27_thumb.jpg",
+      "url": "panoramas/pano_27.jpg"
+    },
+    {
+      "name": "Panorama 28",
+      "thumb": "panoramas/pano_28_thumb.jpg",
+      "url": "panoramas/pano_28.jpg"
+    },
+    {
+      "name": "Panorama 29",
+      "thumb": "panoramas/pano_29_thumb.jpg",
+      "url": "panoramas/pano_29.jpg"
+    },
+    {
+      "name": "Panorama 30",
+      "thumb": "panoramas/pano_30_thumb.jpg",
+      "url": "panoramas/pano_30.jpg"
+    },
+    {
+      "name": "Panorama 31",
+      "thumb": "panoramas/pano_31_thumb.jpg",
+      "url": "panoramas/pano_31.jpg"
+    },
+    {
+      "name": "Panorama 32",
+      "thumb": "panoramas/pano_32_thumb.jpg",
+      "url": "panoramas/pano_32.jpg"
+    },
+    {
+      "name": "Panorama 33",
+      "thumb": "panoramas/pano_33_thumb.jpg",
+      "url": "panoramas/pano_33.jpg"
+    },
+    {
+      "name": "Panorama 34",
+      "thumb": "panoramas/pano_34_thumb.jpg",
+      "url": "panoramas/pano_34.jpg"
+    },
+    {
+      "name": "Panorama 35",
+      "thumb": "panoramas/pano_35_thumb.jpg",
+      "url": "panoramas/pano_35.jpg"
+    },
+    {
+      "name": "Panorama 36",
+      "thumb": "panoramas/pano_36_thumb.jpg",
+      "url": "panoramas/pano_36.jpg"
+    },
+    {
+      "name": "Panorama 37",
+      "thumb": "panoramas/pano_37_thumb.jpg",
+      "url": "panoramas/pano_37.jpg"
+    },
+    {
+      "name": "Panorama 38",
+      "thumb": "panoramas/pano_38_thumb.jpg",
+      "url": "panoramas/pano_38.jpg"
+    },
+    {
+      "name": "Panorama 39",
+      "thumb": "panoramas/pano_39_thumb.jpg",
+      "url": "panoramas/pano_39.jpg"
+    },
+    {
+      "name": "Panorama 40",
+      "thumb": "panoramas/pano_40_thumb.jpg",
+      "url": "panoramas/pano_40.jpg"
+    },
+    {
+      "name": "Panorama 41",
+      "thumb": "panoramas/pano_41_thumb.jpg",
+      "url": "panoramas/pano_41.jpg"
+    },
+    {
+      "name": "Panorama 42",
+      "thumb": "panoramas/pano_42_thumb.jpg",
+      "url": "panoramas/pano_42.jpg"
     }
   ],
   "lights": [

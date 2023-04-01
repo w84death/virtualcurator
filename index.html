@@ -18,7 +18,7 @@
 
   <!-- Other tags -->
   <link rel="icon" href="favicon.png">
-  <link rel="stylesheet" href="styles.css?v4">
+  <link rel="stylesheet" href="styles.css?v102">
   <script src="aframe.min.js"></script>
 </head>
 <body>
@@ -52,7 +52,7 @@
       <a-sky id="hdr-sky" radius="300"></a-sky>
 
       <a-entity id="cameraRig" movement-controls="speed: 0.1" position="0 1.6 3">
-        <a-entity id="camera" camera position="0 0 0" teleport-controls="type: parabolic; collisionEntities: #invisibleFloor;" camera-transform-updater></a-entity>
+        <a-entity id="camera" camera position="0 0 0" camera-transform-updater></a-entity>
         <a-entity id="left-hand" oculus-touch-controls="hand: left;" teleport-controls="type: parabolic; collisionEntities: #invisibleFloor; button: trigger;"></a-entity>
         <a-entity id="right-hand" oculus-touch-controls="hand: right;" teleport-controls="type: parabolic; collisionEntities: #invisibleFloor; button: trigger;"></a-entity>
 
@@ -61,11 +61,10 @@
       <a-cylinder
         id="virtualProduction"
         radius="30"
-        height="40"
+        height="70"
         segments-radial="64"
         position="0 15 0"
         material="side: double; shader: flat;"
-        src="url(panoramas/pano_00.jpg);"
         rotation="0 0 0" visible="false">
       </a-cylinder>
       <a-plane id="invisibleFloor" position="0 0 0" rotation="-90 0 0" width="100" height="100" material="opacity: 0; transparent: true;"></a-plane>
@@ -81,24 +80,15 @@
 
     <div id="floating-menu-load">
       <button class="menu-button dark" id="reset-view-btn">Reset View</button>
-      <button class="menu-button" id="load-model">Change model</button>
-      <button class="menu-button" id="load-enviro">Change environment</button>
-      <button class="menu-button" id="load-lights" disabled>Change lights</button>
-      <button class="menu-button" id="load-sky">Change skybox</button>
-      <button class="menu-button blue" id="toggle-vp">Toggle Virtual Production</button>
-      <button class="menu-button blue" id="load-panorama">Change panorama</button>
+      <button class="menu-button open-popup-btn light" id="expandButton">EXPLORER</button>
+      <button class="menu-button" id="load-model">Next model</button>
+      <button class="menu-button" id="load-enviro">Next environment</button>
+      <button class="menu-button" id="load-sky">Next skybox</button>
+      <button class="menu-button blue" id="load-panorama" style="display:none;">Next panorama</button>
       <button  class="menu-button share" id="share-view">Share view</button>
     </div>
 
     <button class="menu-button red" id="restore-controls" style="display:none;">RESTORE CAMERA CONTROLS</button>
-
-    <div id="panelDrawer" class="panel-drawer collapsed">
-      <button id="expandButton" class="menu-button">SKYS</button>
-      <div id="skyImageList" class="sky-image-list hidden">
-        <p>Those are test skyboxes created using Stable Diffusion. I will choose the best styles and generate final skys.</p>
-        <ul></ul>
-      </div>
-    </div>
 
     <div id="materialDrawer" class="panel-drawer material-drawer collapsed">
       <button id="materialExpandButton" class="menu-button">MATERIALS</button>
@@ -107,6 +97,38 @@
       </div>
     </div>
 
+    <div id="popup" class="popup hidden">
+      <div class="popup-content">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="skies-tab">Skies</button>
+          <button class="tab-btn" data-tab="panoramas-tab" id="panoramas-button">Panoramas</button>
+          <button class="tab-btn" data-tab="environments-tab">Environments</button>
+          <button class="tab-btn" data-tab="models-tab">Models</button>
+        </div>
+        <div class="tab-content">
+          <div id="skies-tab" class="tab-pane active">
+            <!-- Sky thumbnails will go here -->
+          </div>
+          <div id="panoramas-tab" class="tab-pane">
+              <div>
+                <label>Virtual Production:</label>
+                <button class="menu-button blue" id="toggle-vp">Toggle</button>
+              </div>
+              <div>
+                <label>Vertical Position Shift:</label>
+                <input type="range" id="vp-vertical-shift" min="-25" max="25" step="0.1" />
+              </div>
+            <!-- Panorama thumbnails will go here -->
+          </div>
+          <div class="tab-pane" id="environments-tab">
+            <!-- Add the environment items here -->
+          </div>
+          <div class="tab-pane" id="models-tab">
+            <!-- Add the model items here -->
+          </div>
+        <button class="popup-close-btn">Close</button>
+      </div>
+    </div>
 
     <div id="loading-overlay" class="loading-overlay hidden">
       <div class="loading-spinner"></div>
@@ -120,9 +142,9 @@
     </div>
 
     <script>
-      const appVersion = 75;
-      const appDate = "29-03-2023";
+      const appVersion = 104;
+      const appDate = "1-04-2023";
     </script>
-    <script src="virtualcurator.app.js?v=75"></script>
+    <script src="virtualcurator.app.js?v=104"></script>
   </body>
 </html>

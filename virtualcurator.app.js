@@ -21,7 +21,6 @@
         lightSetups = data.lights;
         panoramas = data.panoramas;
 
-        populateSkyImageList();
         loadMaterialPresets();
         loadCameraTransformFromUrlHash();
         loadFOVFromHash();
@@ -29,6 +28,8 @@
         loadEnvironmentFromUrlHash();
         loadSettingsFromUrlHash();
         loadSkyFromUrlHash();
+        loadPanoramaFromHash();
+        bindExplorer();
         enableEnterAppButton();
       });
 
@@ -55,6 +56,11 @@
           loadMaterialPresetFromUrlHash();
           hideLoadingOverlay();
         });
+        // Update the URL's hash
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const nextModelFilename = url.split('/').pop().split('.')[0];
+        params.set('model', nextModelFilename);
+        window.location.hash = params.toString();
       }
 
       function loadModelFromUrlHash() {
@@ -75,6 +81,12 @@
         const vp = params.get('vp');
         const virtualProduction = document.getElementById('virtualProduction');
         virtualProduction.setAttribute('visible', vp);
+        if (params.has("vp_shift")) {
+          const verticalShift = parseFloat(params.get("vp_shift"));
+          const verticalShiftSlider = document.querySelector("#vp-vertical-shift");
+          verticalShiftSlider.value = verticalShift;
+          applyVerticalShift(verticalShift);
+        }
       }
 
 
@@ -82,22 +94,23 @@
           currentModelIndex = (currentModelIndex + 1) % modelImages.length;
           const nextModelUrl = modelImages[currentModelIndex].url;
           loadModel(nextModelUrl);
-
-          // Update the URL's hash
-          const params = new URLSearchParams(window.location.hash.slice(1));
-          const nextModelFilename = nextModelUrl.split('/').pop().split('.')[0];
-          params.set('model', nextModelFilename);
-          window.location.hash = params.toString();
         }
 
 
       function loadEnvironment(url) {
-        showLoadingOverlay();
         const environment = document.getElementById('customEnvironment');
+        if (environment.getAttribute('gltf-model') === url) return;
+        showLoadingOverlay();
         environment.setAttribute('gltf-model', url);
         environment.addEventListener('model-loaded', () => {
           hideLoadingOverlay();
         });
+
+        // Update the URL's hash
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const nextEnvironmentFilename = url.split('/').pop().split('.')[0];
+        params.set('environment', nextEnvironmentFilename);
+        window.location.hash = params.toString();
       }
 
       function loadEnvironmentFromUrlHash() {
@@ -117,34 +130,16 @@
         currentSkyIndex = (currentSkyIndex + 1) % skyImages.length;
         const nextSkyUrl = skyImages[currentSkyIndex].url;
         loadSky(nextSkyUrl);
-
-        // Update the URL's hash
-        const params = new URLSearchParams(window.location.hash.slice(1));
-        const nextSkyFilename = nextSkyUrl.split('/').pop().split('.')[0];
-        params.set('sky', nextSkyFilename);
-        window.location.hash = params.toString();
       }
 
       function loadExactSky(url) {
         loadSky(url);
-
-        // Update the URL's hash
-        const params = new URLSearchParams(window.location.hash.slice(1));
-        const nextSkyFilename = url.split('/').pop().split('.')[0];
-        params.set('sky', nextSkyFilename);
-        window.location.hash = params.toString();
       }
 
       function loadNextEnvironment() {
         currentEnvironmentIndex = (currentEnvironmentIndex + 1) % environmentModels.length;
         const nextEnvironmentUrl = environmentModels[currentEnvironmentIndex].url;
         loadEnvironment(nextEnvironmentUrl);
-
-        // Update the URL's hash
-        const params = new URLSearchParams(window.location.hash.slice(1));
-        const nextEnvironmentFilename = nextEnvironmentUrl.split('/').pop().split('.')[0];
-        params.set('environment', nextEnvironmentFilename);
-        window.location.hash = params.toString();
       }
 
 
@@ -229,6 +224,12 @@
             scene.setAttribute("reflection", "");
           }, 0);
         });
+
+        // Update the URL's hash
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const nextSkyFilename = url.split('/').pop().split('.')[0];
+        params.set('sky', nextSkyFilename);
+        window.location.hash = params.toString();
       }
 
       AFRAME.registerComponent('buttons-events',{
@@ -432,37 +433,6 @@
         }
       }
 
-
-     function populateSkyImageList() {
-        const skyImageList = document.getElementById('skyImageList');
-        const skyImageListUL = document.createElement('ul');
-
-        skyImages.forEach((skyImage) => {
-          const skyImageListItem = document.createElement('li');
-          const skyImageButton = document.createElement('button');
-          const skyImageThumbnail = document.createElement('img');
-
-          skyImageButton.dataset.skyUrl = skyImage.url;
-          skyImageButton.classList.add('menu-button');
-
-          skyImageThumbnail.src = skyImage.url.replace('.', '_thumb.'); // Add 'thumb_' suffix to the image URL
-          skyImageThumbnail.alt = skyImage.title;
-
-          skyImageButton.appendChild(skyImageThumbnail);
-          skyImageListItem.appendChild(skyImageButton);
-          skyImageListUL.appendChild(skyImageListItem);
-
-          // Add event listener for the button
-          skyImageButton.addEventListener('click', () => {
-            loadExactSky(skyImage.url);
-          });
-        });
-
-        skyImageList.appendChild(skyImageListUL);
-
-
-      }
-
       function resetView() {
         window.location.hash = '';
        blockLook();
@@ -493,7 +463,6 @@
 
       document.getElementById('reset-view-btn').addEventListener('click', resetView);
 
-      document.querySelector('#expandButton').addEventListener('click', togglePanelDrawer);
       document.getElementById('enter-app-btn').addEventListener('click', () => {
         document.getElementById('popup-window').style.display = 'none';
       });
@@ -701,17 +670,23 @@
 
       function loadPanorama(url){
         const model = document.querySelector('#virtualProduction');
-        if (model.getAttribute('src') === url ) return;
+        if (model.getAttribute('src') === 'url(' + url + ')' ) return;
         showLoadingOverlay();
         const scene = document.querySelector("#theScene");
         scene.removeAttribute("reflection");
-        model.setAttribute('material', 'src', 'url(' + url + ')');
+        model.setAttribute('src', 'url(' + url + ')');
         model.addEventListener('materialtextureloaded', () => {
           hideLoadingOverlay();
           setTimeout(() => {
             scene.setAttribute("reflection", "");
           }, 0);
         });
+
+        // Update the URL's hash
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const vp_pano = url.split('/').pop().split('.')[0];
+        params.set('vp_pano', vp_pano);
+        window.location.hash = params.toString();
       }
 
       function loadNextPanorama() {
@@ -720,6 +695,21 @@
         const url = panoramas[panoramaIndex].url;
 
         loadPanorama(url);
+      }
+
+      function loadPanoramaFromHash() {
+        const params = new URLSearchParams(window.location.hash.slice(1));
+        const pano = params.get('vp_pano');
+        if (pano){
+          const panoUrl = `panoramas/${pano}.jpg`;
+          loadPanorama(panoUrl);
+          document.querySelector('#load-panorama').style.display='block';
+        }else{
+          const panoUrl = `panoramas/pano_00.jpg`;
+          loadPanorama(panoUrl);
+          virtualProduction.setAttribute('visible', false);
+          document.querySelector('#load-panorama').style.display='none';
+        }
       }
 
       function toggleVirtualProduction() {
@@ -734,8 +724,13 @@
         }, 0);
 
         document.querySelector('#load-panorama').style.display=showVP? 'block':'none';
+
         // Update the URL's hash
         const params = new URLSearchParams(window.location.hash.slice(1));
+        if(!showVP){
+          document.querySelector('#load-panorama').style.display=showVP? 'block':'none';
+           params.set('vp_pano','');
+        }
         params.set('vp', showVP);
         window.location.hash = params.toString();
       }
@@ -768,7 +763,102 @@
         });
       }
 
-      document.querySelector('#load-lights').addEventListener('click',loadNextLightSetup);
+      // document.querySelector('#load-lights').addEventListener('click',loadNextLightSetup);
 
+      function applyVerticalShift(verticalShift) {
+        const virtualProduction = document.querySelector("#virtualProduction");
+        const currentPosition = virtualProduction.getAttribute("position");
+        virtualProduction.setAttribute("position", {
+          x: currentPosition.x,
+          y: verticalShift,
+          z: currentPosition.z,
+        });
+
+         // Update the URL's hash
+          const params = new URLSearchParams(window.location.hash.slice(1));
+          params.set('vp_shift', verticalShift);
+          window.location.hash = params.toString();
+      }
+
+      function bindExplorer() {
+
+        // Add event listeners to the tab buttons
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const targetTab = btn.dataset.tab;
+
+            // Toggle the active state for the buttons
+            tabBtns.forEach(b => b.classList.toggle('active', b === btn));
+
+            // Toggle the active state for the tab panes
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            tabPanes.forEach(pane => pane.classList.toggle('active', pane.id === targetTab));
+          });
+        });
+
+        // Add event listener to the close button
+        const popupCloseBtn = document.querySelector('.popup-close-btn');
+        popupCloseBtn.addEventListener('click', () => {
+          const popup = document.querySelector('#popup');
+          popup.classList.add('hidden');
+        });
+
+        // Function to open the popup
+        function openPopup() {
+          const popup = document.querySelector('#popup');
+          popup.classList.remove('hidden');
+        }
+
+        // Add event listener to open the popup
+        const openPopupButton = document.querySelector('.open-popup-btn');
+        openPopupButton.addEventListener('click', openPopup);
+
+        function createThumbnail(container, item) {
+          const thumbnail = document.createElement('div');
+          thumbnail.classList.add('thumbnail');
+          thumbnail.style.backgroundImage = `url(${item.thumb})`;
+          thumbnail.setAttribute('data-url', item.url);
+          thumbnail.setAttribute('title', item.name);
+          container.appendChild(thumbnail);
+        }
+
+        const skiesContainer = document.querySelector('#skies-tab');
+        const panoramasContainer = document.querySelector('#panoramas-tab');
+        const environmentsContainer = document.querySelector("#environments-tab");
+        const modelsContainer = document.querySelector("#models-tab");
+
+        skyImages.forEach(sky => createThumbnail(skiesContainer, sky));
+        panoramas.forEach(panorama => createThumbnail(panoramasContainer, panorama));
+        environmentModels.forEach(environment => createThumbnail(environmentsContainer, environment));
+        modelImages.forEach(model => createThumbnail(modelsContainer, model));
+
+        document.querySelectorAll('.thumbnail').forEach(thumbnail => {
+          thumbnail.addEventListener('click', (e) => {
+            const selectedUrl = e.target.dataset.url;
+
+            if (e.target.parentElement.id === 'skies-tab') {
+              loadSky(selectedUrl);
+            } else
+            if (e.target.parentElement.id === 'panoramas-tab') {
+              loadPanorama(selectedUrl);
+            }else
+            if (e.target.parentElement.id === 'environments-tab') {
+              loadEnvironment(selectedUrl);
+            }else
+            if (e.target.parentElement.id === 'models-tab') {
+              loadModel(selectedUrl);
+            }
+
+            // Toggle the selected state for the thumbnails
+            e.target.parentElement.querySelectorAll('.thumbnail').forEach(t => t.classList.toggle('selected', t === e.target));
+          });
+        });
+
+        document.querySelector("#vp-vertical-shift").addEventListener("input", function (event) {
+          const shiftValue = parseFloat(event.target.value);
+          applyVerticalShift(shiftValue);
+        });
+      }
 
       updateVersion();
